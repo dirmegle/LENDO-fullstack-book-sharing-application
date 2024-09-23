@@ -42,9 +42,11 @@
     "@types/node": "^22.5.5",
     "@types/pg": "^8.11.10",
     "@types/supertest": "^6.0.2",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vitest/coverage-v8": "^2.1.1",
+    "chance": "^1.1.12",
     "eslint": "^8.57.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
@@ -57,6 +59,7 @@
     "tsc-alias": "^1.8.10",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2",
+    "uuid": "^10.0.0",
     "vitest": "^2.1.1"
   }
 }
