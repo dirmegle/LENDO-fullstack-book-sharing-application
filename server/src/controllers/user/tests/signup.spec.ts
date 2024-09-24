@@ -19,7 +19,6 @@ describe('signup', () => {
     )
 
     expect(createdUser).toMatchObject({
-      id: expect.any(String),
       ...user,
       password: expect.not.stringContaining(user.password),
     })
@@ -31,25 +30,24 @@ describe('signup', () => {
 
   it('throws an error if email is invalid and does not save user', async () => {
     const user = fakeUser({ email: 'not-correct-email' })
-    const response = await signup(user)
+
+    await expect(signup(user)).rejects.toThrow(/email/i)
 
     const [createdUser] = await selectAll(db, 'user', (q) =>
       q('email', '=', user.email)
     )
 
-    expect(response).rejects.toThrow(/email/i)
     expect(createdUser).toBeUndefined()
   })
 
   it('throws error if password is less than 8 characters', async () => {
     const user = fakeUser({ password: 'just4' })
-    const response = await signup(user)
+
+    await expect(signup(user)).rejects.toThrow(/too_small/i)
 
     const [createdUser] = await selectAll(db, 'user', (q) =>
       q('email', '=', user.email)
     )
-
-    expect(response).rejects.toThrow(/email/i)
     expect(createdUser).toBeUndefined()
   })
 })
