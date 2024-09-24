@@ -1,10 +1,7 @@
 import type { User } from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
-import { v4 as uuidv4 } from 'uuid'
 import type { AuthUser } from '../user'
-
-const randomId = () => uuidv4()
 
 /**
  * Generates a fake user with some default test data.
@@ -14,8 +11,8 @@ export const fakeUser = <T extends Partial<Insertable<User>>>(
   overrides: T = {} as T
 ) => ({
   email: random.email(),
-  firstName: random.firstName(),
-  lastName: random.lastName(),
+  firstName: random.string({ length: 10 }),
+  lastName: random.string({ length: 15 }),
   password: 'Password.123!',
   ...overrides,
 })
@@ -23,7 +20,7 @@ export const fakeUser = <T extends Partial<Insertable<User>>>(
 export const fakeAuthUser = <T extends Partial<AuthUser>>(
   overrides: T = {} as T
 ): AuthUser => ({
-  id: randomId(),
+  id: random.guid(),
   email: random.email(),
   ...overrides,
 })
