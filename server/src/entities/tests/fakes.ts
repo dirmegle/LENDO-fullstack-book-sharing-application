@@ -7,13 +7,22 @@ import type { AuthUser } from '../user'
  * Generates a fake user with some default test data.
  * @param overrides Any properties that should be different from default fake data.
  */
-export const fakeUser = <T extends Partial<Insertable<User>>>(
+
+export const fakeUserWithoutId = <T extends Partial<Insertable<User>>>(
   overrides: T = {} as T
 ) => ({
   email: random.email(),
   firstName: random.string({ length: 10 }),
   lastName: random.string({ length: 15 }),
   password: 'Password.123!',
+  ...overrides,
+})
+
+export const fakeUserWithId = <T extends Partial<Insertable<User>>>(
+  overrides: T = {} as T
+) => ({
+  id: random.guid(),
+  ...fakeUserWithoutId(overrides),
   ...overrides,
 })
 
