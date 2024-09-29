@@ -4,10 +4,10 @@ import { TRPCError } from '@trpc/server'
 import { parseTokenPayload } from '@server/trpc/tokenPayload'
 import { publicProcedure } from '..'
 
-const { tokenKey } = config.auth
+const { accessTokenKey } = config.auth
 
 function verify(token: string) {
-  return jsonwebtoken.verify(token, tokenKey)
+  return jsonwebtoken.verify(token, accessTokenKey)
 }
 
 function getUserFromToken(token: string) {
