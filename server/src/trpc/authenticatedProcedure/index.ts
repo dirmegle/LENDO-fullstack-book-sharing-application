@@ -56,6 +56,7 @@ export const authenticatedProcedure = publicProcedure.use(({ ctx, next }) => {
   if (!token) {
     throw new TRPCError({
       code: 'UNAUTHORIZED',
+
       message: 'Unauthenticated. Please log in.',
     })
   }
