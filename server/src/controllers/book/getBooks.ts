@@ -5,7 +5,7 @@ export default authenticatedProcedure.query(() => {
   console.log('getBook')
   return 'book returned'
 
-  // receive title string
+  // receive title, author, isbn object
   // call api with the string
   // return an array of Book
 })

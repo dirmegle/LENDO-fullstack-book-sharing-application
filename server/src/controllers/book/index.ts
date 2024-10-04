@@ -1,6 +1,6 @@
 import { router } from '@server/trpc'
-import getBookByTitle from './getBookByTitle'
+import getBooks from './getBooks'
 
 export default router({
-  getBookByTitle,
+  getBooks,
 })
