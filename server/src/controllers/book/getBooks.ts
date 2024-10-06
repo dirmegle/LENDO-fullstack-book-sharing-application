@@ -1,11 +1,12 @@
+import { z } from 'zod'
 import { authenticatedProcedure } from '../../trpc/authenticatedProcedure/index'
 
-export default authenticatedProcedure.query(() => {
-  // eslint-disable-next-line no-console
-  console.log('getBook')
-  return 'book returned'
+export default authenticatedProcedure
+  .input(z.object({
+  title: z.string().optional(),
+  author: z.string().optional(),
+  isbn: z.string().optional(),
+  }))
+  .query(({input, ctx: { repos }}) => {
 
-  // receive title, author, isbn object
-  // call api with the string
-  // return an array of Book
-})
+  })

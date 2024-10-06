@@ -7,7 +7,7 @@ export async function up(db: Kysely<any>) {
     .addColumn('title', 'text', (c) => c.notNull())
     .addColumn('author', 'text', (c) => c.notNull())
     .addColumn('description', 'text', (c) => c.notNull())
-    .addColumn('page_count', 'integer')
+    .addColumn('categories', 'text')
     .addColumn('cover_image', 'text')
     .execute()
 

@@ -27,15 +27,15 @@ afterAll(() => {
 describe('getBooks', () => {
     it('returns book data based on title', async () => {
         const result = await getBooks({ title: mockedBookData.title})
-        expect(result).toEqual(mockedBookData)
+        expect(result).toEqual([mockedBookData])
     })
     it('returns book data based on author', async () => {
         const result = await getBooks({ author: mockedBookData.author})
-        expect(result).toEqual(mockedBookData)
+        expect(result).toEqual([mockedBookData])
     })
     it('returns book data based on isbn', async () => {
         const result = await getBooks({ isbn: mockedBookData.isbn})
-        expect(result).toEqual(mockedBookData)
+        expect(result).toEqual([mockedBookData])
     })
     it('throws an error if no book data has been found', async () => {
         await expect(getBooks({ title: "New Book Title"})).rejects.toThrow()
