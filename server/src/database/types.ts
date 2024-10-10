@@ -5,10 +5,10 @@
 
 export interface Book {
   author: string
+  categories: string | null
   coverImage: string | null
   description: string
   isbn: string
-  pageCount: number | null
   title: string
 }
 
