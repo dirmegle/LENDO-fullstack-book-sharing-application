@@ -1,27 +1,23 @@
 import type { Book } from '@server/database/types'
 import type { BookRequest } from '@server/entities/book'
 import type { VolumeInfo, ReturnedBooks } from './types'
+import { fetchData } from './fetch'
 
 const { env } = process
 
-const getISBN = (volumeInfo: VolumeInfo) => {
+export const getISBN = (volumeInfo: VolumeInfo) => {
   if (!volumeInfo.industryIdentifiers) {
     return undefined
   }
 
-  return volumeInfo.industryIdentifiers.map((obj) => obj.identifier).join(', ')
+  const identifiers = volumeInfo.industryIdentifiers
+    .map((obj) => obj.identifier)
+    .join(', ')
+
+  return identifiers === '' ? undefined : identifiers
 }
 
-const fetchData = async (url: string) => {
-  try {
-    const response = await fetch(url)
-    return await response.json()
-  } catch (error) {
-    throw new Error('Failed to fetch books')
-  }
-}
-
-const getDataFromAPI = async (request: BookRequest) => {
+export const formulateRequest = (request: BookRequest) => {
   let parameter
   let searchValue
 
@@ -34,7 +30,17 @@ const getDataFromAPI = async (request: BookRequest) => {
   } else if (request.title) {
     parameter = 'intitle'
     searchValue = request.title
+  } else if (Object.keys(request).length > 1) {
+    throw new Error(
+      'Request formulated incorrectly (must be one of: book, author or isbn)'
+    )
   }
+
+  return { parameter, searchValue }
+}
+
+export const getDataFromAPI = async (request: BookRequest) => {
+  const { parameter, searchValue } = formulateRequest(request)
 
   if (!parameter || !searchValue) {
     throw new Error('No valid search parameters found in the request')
