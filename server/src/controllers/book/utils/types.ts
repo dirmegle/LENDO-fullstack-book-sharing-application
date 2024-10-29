@@ -4,8 +4,8 @@ type IndustryIdentifiers = {
 }
 
 type ImageLinks = {
-  smallThumbnail: string
-  thumbnail: string
+  smallThumbnail: string | null
+  thumbnail: string | null
 }
 
 export type VolumeInfo = {
@@ -13,7 +13,7 @@ export type VolumeInfo = {
   authors: string[]
   description: string
   industryIdentifiers: IndustryIdentifiers[]
-  categories: string[]
+  categories: (string | null)[]
   imageLinks: ImageLinks
 }
 

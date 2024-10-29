@@ -1,4 +1,4 @@
-import type { User } from '@server/database/types'
+import type { Book, BookCopy, User } from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
 import type { AuthUser } from '../user'
@@ -31,5 +31,27 @@ export const fakeAuthUser = <T extends Partial<AuthUser>>(
 ): AuthUser => ({
   id: random.guid(),
   email: random.email(),
+  ...overrides,
+})
+
+export const fakeBook = <T extends Partial<Book>>(
+  overrides: T = {} as T
+): Book => ({
+  author: random.name(),
+  categories: random.string(),
+  coverImage: random.url(),
+  title: random.string(),
+  description: random.string(),
+  isbn: String(random.integer({ min: 1000000000, max: 9999999999 })),
+  ...overrides,
+})
+
+export const fakeBookCopyWithoutId = <T extends Partial<Insertable<BookCopy>>>(
+  overrides: T = {} as T
+) => ({
+  isAvailable: random.bool(),
+  isbn: String(random.integer({ min: 1000000000, max: 9999999999 })),
+  isLendable: random.bool(),
+  ownerId: random.guid(),
   ...overrides,
 })

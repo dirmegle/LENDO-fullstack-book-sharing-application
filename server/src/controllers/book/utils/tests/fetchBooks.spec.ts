@@ -1,42 +1,44 @@
+import { fakeBook } from '@server/entities/tests/fakes'
 import fetchBooks, { formulateRequest, getISBN } from '../fetchBooks'
 import type { ReturnedBooks } from '../types'
 
-const mockedBookData = {
-  author: 'Jane Austen',
-  categories: 'Fiction',
-  title: 'Pride and prejudice',
-  coverImage: 'https://www.coverimage.com',
-  description: 'About pride and prejudice',
-  isbn: '1234567891, 1234567891123',
-}
+const mockedBookData = fakeBook()
+
+// const mockedBookData = {
+//   author: 'Jane Austen',
+//   categories: 'Fiction',
+//   title: 'Pride and prejudice',
+//   coverImage: 'https://www.coverimage.com',
+//   description: 'About pride and prejudice',
+//   isbn: '1234567891, 1234567891123',
+// }
 
 const volumeInfoWithoutIdentifier = {
-  title: 'Pride and prejudice',
-  authors: ['Jane Austen'],
-  description: 'About pride and prejudice',
+  title: mockedBookData.title,
+  authors: [mockedBookData.author],
+  description: mockedBookData.description,
   industryIdentifiers: [],
-  categories: ['Fiction'],
+  categories: [mockedBookData.categories],
   imageLinks: {
-    smallThumbnail: 'www.link.com',
-    thumbnail: 'www.link2.com',
+    smallThumbnail: mockedBookData.coverImage,
+    thumbnail: mockedBookData.coverImage,
   },
 }
 
 const volumeInfoWithIdentifier = {
-  title: 'Pride and prejudice',
-  authors: ['Jane Austen'],
-  description: 'About pride and prejudice',
+  title: mockedBookData.title,
+  authors: [mockedBookData.author],
+  description: mockedBookData.description,
   industryIdentifiers: [
     {
       type: 'ISBN_10',
-      identifier: '1234567891',
+      identifier: mockedBookData.isbn,
     },
-    { type: 'ISBN_13', identifier: '1234567891123' },
   ],
-  categories: ['Fiction'],
+  categories: [mockedBookData.categories],
   imageLinks: {
-    smallThumbnail: 'https://www.coverimage.com',
-    thumbnail: 'https://www.coverimage.com',
+    smallThumbnail: mockedBookData.coverImage,
+    thumbnail: mockedBookData.coverImage,
   },
 }
 
@@ -44,7 +46,7 @@ vitest.mock('../fetch', async () => ({
   ...(await vitest.importActual('../fetch')),
   fetchData: vitest.fn(
     async (): Promise<ReturnedBooks> => ({
-      totalItems: 2,
+      totalItems: 1,
       items: [{ volumeInfo: volumeInfoWithIdentifier }],
     })
   ),

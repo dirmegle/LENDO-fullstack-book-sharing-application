@@ -1,6 +1,8 @@
 import { router } from '@server/trpc'
-import getBooks from './getBooks'
+import fetchBooksFromAPI from './fetchBooksFromAPI'
+import addBook from './addBook'
 
 export default router({
-  getBooks,
+  fetchBooksFromAPI,
+  addBook,
 })
