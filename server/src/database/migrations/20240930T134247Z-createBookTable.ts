@@ -3,12 +3,12 @@ import type { Kysely } from 'kysely'
 export async function up(db: Kysely<any>) {
   await db.schema
     .createTable('book')
-    .addColumn('isbn', 'varchar', (c) => c.primaryKey().notNull())
+    .addColumn('isbn', 'varchar', (c) => c.primaryKey().notNull().unique())
     .addColumn('title', 'text', (c) => c.notNull())
     .addColumn('author', 'text', (c) => c.notNull())
     .addColumn('description', 'text', (c) => c.notNull())
-    .addColumn('categories', 'text')
-    .addColumn('cover_image', 'text')
+    .addColumn('categories', 'text', (c) => c.notNull())
+    .addColumn('cover_image', 'text', (c) => c.notNull())
     .execute()
 
   await db.schema

@@ -15,3 +15,5 @@ type OnlyOne<T, K extends keyof T = keyof T> = K extends keyof T
   : never
 
 export type BookRequest = OnlyOne<Pick<Book, 'author' | 'title' | 'isbn'>>
+
+export const bookKeys = Object.keys(bookSchema.shape) as (keyof Book)[]

@@ -5,8 +5,8 @@
 
 export interface Book {
   author: string
-  categories: string | null
-  coverImage: string | null
+  categories: string
+  coverImage: string
   description: string
   isbn: string
   title: string

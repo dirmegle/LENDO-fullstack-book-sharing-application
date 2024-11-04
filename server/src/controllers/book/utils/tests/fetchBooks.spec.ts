@@ -4,15 +4,6 @@ import type { ReturnedBooks } from '../types'
 
 const mockedBookData = fakeBook()
 
-// const mockedBookData = {
-//   author: 'Jane Austen',
-//   categories: 'Fiction',
-//   title: 'Pride and prejudice',
-//   coverImage: 'https://www.coverimage.com',
-//   description: 'About pride and prejudice',
-//   isbn: '1234567891, 1234567891123',
-// }
-
 const volumeInfoWithoutIdentifier = {
   title: mockedBookData.title,
   authors: [mockedBookData.author],
