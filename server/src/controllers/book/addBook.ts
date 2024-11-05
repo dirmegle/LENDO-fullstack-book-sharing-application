@@ -1,6 +1,3 @@
-// Receive Book type input
-// Add book to database (CREATE)
-
 import { bookSchema } from '@server/entities/book'
 import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'

@@ -55,3 +55,11 @@ export const fakeBookCopyWithoutId = <T extends Partial<Insertable<BookCopy>>>(
   ownerId: random.guid(),
   ...overrides,
 })
+
+export const fakeBookCopyWithId = <T extends Partial<Insertable<BookCopy>>>(
+  overrides: T = {} as T
+) => ({
+  id: random.guid(),
+  ...fakeBookCopyWithoutId(overrides),
+  ...overrides,
+})
