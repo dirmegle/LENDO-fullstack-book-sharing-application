@@ -10,6 +10,10 @@ import {
 } from '@server/entities/tests/fakes'
 import { insertAll } from '@tests/utils/records'
 import { bookCopyKeys } from '@server/entities/bookCopy'
+import {
+  testMissingFields,
+  testUndefinedFields,
+} from '@tests/utils/undefinedMissingFields'
 import bookCopyRouter from '..'
 
 const db = await wrapInRollbacks(createTestDatabase())
@@ -56,38 +60,22 @@ describe('addBookCopy', () => {
 
   it('throws an error if any of the fields are undefined', async () => {
     const { addBookCopy } = createCaller(authContext({ db }, user))
-    const userKeys = bookCopyKeys.filter(
-      (word) => word !== 'id' && word !== 'ownerId'
+
+    testUndefinedFields(
+      bookCopyKeys,
+      ['id', 'ownerId'],
+      fakeBookCopyWithoutId,
+      addBookCopy
     )
-
-    userKeys.forEach(async (key) => {
-      const bookCopy = fakeBookCopyWithoutId({ [key]: undefined })
-
-      await expect(addBookCopy(bookCopy)).rejects.toThrowError(
-        new RegExp(key, 'i')
-      )
-    })
   })
 
-  // it('throws an error if any of the required fields are missing', async () => {
-  //   const { addBookCopy } = createCaller(authContext({ db }, user))
-  //   const requiredKeys = bookCopyKeys.filter(
-  //     (key) => key !== 'id' && key !== 'ownerId' // Adjust as needed for non-required fields
-  //   )
-
-  //   for (const key of requiredKeys) {
-  //     const bookCopy = fakeBookCopyWithoutId({
-  //       isbn: book.isbn,
-  //       ownerId: user.id,
-  //       // Include other default properties if needed
-  //     })
-
-  //     // Delete the key to simulate a missing property
-  //     delete bookCopy[key]
-
-  //     await expect(addBookCopy(bookCopy)).rejects.toThrowError(
-  //       new RegExp(key, 'i')
-  //     )
-  //   }
-  // })
+  it('throws an error if any of the fields are missing', async () => {
+    const { addBookCopy } = createCaller(authContext({ db }, user))
+    testMissingFields(
+      bookCopyKeys,
+      ['id', 'ownerId'],
+      fakeBookCopyWithoutId,
+      addBookCopy
+    )
+  })
 })

@@ -4,6 +4,10 @@ import { createCallerFactory } from '@server/trpc'
 import { fakeUserWithId, fakeUserWithoutId } from '@server/entities/tests/fakes'
 import { insertAll, selectAll } from '@tests/utils/records'
 import { userKeysAll } from '@server/entities/user'
+import {
+  testMissingFields,
+  testUndefinedFields,
+} from '@tests/utils/undefinedMissingFields'
 import userRouter from '..'
 
 const db = await wrapInRollbacks(createTestDatabase())
@@ -52,14 +56,12 @@ describe('signup', () => {
     expect(createdUser).toBeUndefined()
   })
 
-  it('throws error if any of the required properties are empty', async () => {
-    const userKeys = userKeysAll.filter((word) => word !== 'id')
+  it('throws error if any of the required properties are undefined', async () => {
+    testUndefinedFields(userKeysAll, ['id'], fakeUserWithoutId, signup)
+  })
 
-    userKeys.forEach(async (key) => {
-      const user = fakeUserWithoutId({ [key]: '' })
-
-      await expect(signup(user)).rejects.toThrowError(new RegExp(key, 'i'))
-    })
+  it('throws error if any of the required properties are missing', async () => {
+    testMissingFields(userKeysAll, ['id'], fakeUserWithoutId, signup)
   })
 
   it('throws error for duplicate email', async () => {

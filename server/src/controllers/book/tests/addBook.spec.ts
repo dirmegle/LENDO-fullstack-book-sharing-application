@@ -4,6 +4,11 @@ import { createCallerFactory } from '@server/trpc'
 import { fakeBook, fakeUserWithId } from '@server/entities/tests/fakes'
 import { insertAll } from '@tests/utils/records'
 import { authContext, requestContext } from '@tests/utils/context'
+import { bookKeys } from '@server/entities/book'
+import {
+  testMissingFields,
+  testUndefinedFields,
+} from '@tests/utils/undefinedMissingFields'
 import bookRouter from '..'
 
 const db = await wrapInRollbacks(createTestDatabase())
@@ -30,5 +35,17 @@ describe('addBook', () => {
     await expect(
       addBook(fakeBook({ isbn: existingBook.isbn }))
     ).rejects.toThrow(/ISBN/i)
+  })
+  it('throws an error if any of the fields are undefined', async () => {
+    const [user] = await insertAll(db, 'user', fakeUserWithId())
+    const { addBook } = createCaller(authContext({ db }, user))
+
+    testUndefinedFields(bookKeys, [], fakeBook, addBook)
+  })
+  it('throws an error if any of the fields are missing', async () => {
+    const [user] = await insertAll(db, 'user', fakeUserWithId())
+    const { addBook } = createCaller(authContext({ db }, user))
+
+    testMissingFields(bookKeys, [], fakeBook, addBook)
   })
 })
