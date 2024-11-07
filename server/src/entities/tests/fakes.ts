@@ -1,4 +1,10 @@
-import type { Book, BookCopy, User } from '@server/database/types'
+import type {
+  Book,
+  BookCopy,
+  Friendship,
+  StatusEnum,
+  User,
+} from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
 import type { AuthUser } from '../user'
@@ -61,5 +67,24 @@ export const fakeBookCopyWithId = <T extends Partial<Insertable<BookCopy>>>(
 ) => ({
   id: random.guid(),
   ...fakeBookCopyWithoutId(overrides),
+  ...overrides,
+})
+
+export const fakeFriendshipWithoutId = <
+  T extends Partial<Insertable<Friendship>>,
+>(
+  overrides: T = {} as T
+) => ({
+  fromUserId: random.guid(),
+  toUserId: random.guid(),
+  status: 'pending' as StatusEnum,
+  ...overrides,
+})
+
+export const fakeFriendshipWithId = <T extends Partial<Insertable<Friendship>>>(
+  overrides: T = {} as T
+) => ({
+  id: random.guid(),
+  ...fakeFriendshipWithoutId(overrides),
   ...overrides,
 })
