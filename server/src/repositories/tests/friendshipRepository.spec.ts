@@ -6,6 +6,7 @@ import { createTestDatabase } from '@tests/utils/database'
 import { insertAll, selectAll } from '@tests/utils/records'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { random } from '@tests/utils/random'
+import { uuidRegex } from '@tests/utils/regex'
 import { friendshipRepository } from '../friendshipRepository'
 
 const db = await wrapInRollbacks(createTestDatabase())
@@ -27,7 +28,7 @@ describe('create', () => {
 
     const result = await repository.create(friendship)
 
-    expect(result).toEqual(friendship)
+    expect(result.id).toMatch(uuidRegex)
   })
 })
 
@@ -80,6 +81,20 @@ describe('getExistingFriendship', () => {
       random.guid()
     )
 
+    expect(foundFriendship).toBeUndefined()
+  })
+})
+
+describe('findById', () => {
+  it('returns friendship by id if exists', async () => {
+    const [friendship] = await insertAll(db, 'friendship', [
+      fakeFriendshipWithId({ fromUserId: fromUser.id, toUserId: toUser.id }),
+    ])
+    const foundFriendship = await repository.findById(friendship.id)
+    expect(foundFriendship).toEqual(friendship)
+  })
+  it('returns undefined if the user does not exist', async () => {
+    const foundFriendship = await repository.findById(fakeFriendshipWithId().id)
     expect(foundFriendship).toBeUndefined()
   })
 })

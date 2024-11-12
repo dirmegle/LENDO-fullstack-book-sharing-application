@@ -1,7 +1,9 @@
 import type {
   Book,
   BookCopy,
+  EntityTypeEnum,
   Friendship,
+  Notification,
   StatusEnum,
   User,
 } from '@server/database/types'
@@ -86,5 +88,20 @@ export const fakeFriendshipWithId = <T extends Partial<Insertable<Friendship>>>(
 ) => ({
   id: random.guid(),
   ...fakeFriendshipWithoutId(overrides),
+  ...overrides,
+})
+
+export const fakeNotificationWithId = <
+  T extends Partial<Insertable<Notification>>,
+>(
+  overrides: T = {} as T
+) => ({
+  id: random.guid(),
+  entityId: random.guid(),
+  entityType: 'friendship' as EntityTypeEnum,
+  isRead: random.bool(),
+  message: random.sentence(),
+  triggeredById: random.guid(),
+  userId: random.guid(),
   ...overrides,
 })

@@ -2,7 +2,7 @@ import type { Book } from '@server/database'
 import { z } from 'zod'
 
 export const bookSchema = z.object({
-  title: z.string(),
+  title: z.string().min(1),
   author: z.string().min(1),
   coverImage: z.string(),
   description: z.string().min(1),

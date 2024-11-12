@@ -45,3 +45,15 @@ describe('findByEmail', () => {
     expect(foundUser).toBeUndefined()
   })
 })
+
+describe('findById', () => {
+  it('returns user by id if exists', async () => {
+    const [user] = await insertAll(db, 'user', [fakeUserWithId()])
+    const foundUser = await repository.findByUserId(user.id)
+    expect(foundUser).toEqual(user)
+  })
+  it('returns undefined if the user does not exist', async () => {
+    const foundUser = await repository.findByUserId(fakeUserWithId().id)
+    expect(foundUser).toBeUndefined()
+  })
+})

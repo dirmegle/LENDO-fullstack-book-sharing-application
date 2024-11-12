@@ -3,11 +3,18 @@ import { userRepository } from './userRepository'
 import { bookRepository } from './bookRepository'
 import { bookCopyRepository } from './bookCopyRepository'
 import { friendshipRepository } from './friendshipRepository'
+import { notificationsRepository } from './notificationsRepository'
 
 export type RepositoryFactory = <T>(db: Database) => T
 
 // index of all repositories for provideRepos
-const repositories = { userRepository, bookRepository, bookCopyRepository, friendshipRepository }
+const repositories = {
+  userRepository,
+  bookRepository,
+  bookCopyRepository,
+  friendshipRepository,
+  notificationsRepository,
+}
 
 export type RepositoriesFactories = typeof repositories
 export type Repositories = {

@@ -1,31 +1,23 @@
-// create
-// getExistingFriendship
-// update status (id, newStatus)
-
 import type { Database, Friendship, StatusEnum } from '@server/database'
-import { friendshipKeys } from '@server/entities/friendship'
-import type { Selectable, Updateable } from 'kysely'
+import type { Selectable } from 'kysely'
 
 export function friendshipRepository(db: Database) {
   return {
-    async create(friendship: Friendship): Promise<Friendship> {
+    async create(friendship: Friendship): Promise<Pick<Friendship, 'id'>> {
       return db
         .insertInto('friendship')
         .values(friendship)
-        .returning(friendshipKeys)
+        .returning('id')
         .executeTakeFirstOrThrow()
     },
 
-    async updateStatus(
-      id: string,
-      newStatus: StatusEnum
-    ): Promise<Updateable<Friendship> | undefined> {
+    async updateStatus(id: string, newStatus: StatusEnum): Promise<Friendship> {
       return db
         .updateTable('friendship')
         .set({ status: newStatus })
         .where('id', '=', id)
         .returningAll()
-        .executeTakeFirst()
+        .executeTakeFirstOrThrow()
     },
 
     async getExistingFriendship(
@@ -42,6 +34,16 @@ export function friendshipRepository(db: Database) {
           ])
         )
         .executeTakeFirst()
+    },
+
+    async findById(id: string): Promise<Selectable<Friendship> | undefined> {
+      const friendship = await db
+        .selectFrom('friendship')
+        .selectAll()
+        .where('id', '=', id)
+        .executeTakeFirst()
+
+      return friendship
     },
   }
 }

@@ -5,8 +5,8 @@ export const friendshipStatus = ['pending', 'accepted', 'declined'] as const
 
 export const friendshipSchema = z.object({
   id: z.string().uuid(),
-  fromUserId: z.string().uuid(),
-  toUserId: z.string().uuid(),
+  fromUserId: z.string().uuid().min(1),
+  toUserId: z.string().uuid().min(1),
   status: z.enum(friendshipStatus),
 })
 
