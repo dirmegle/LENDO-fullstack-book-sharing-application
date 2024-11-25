@@ -17,39 +17,36 @@ export default authenticatedProcedure
   )
   .input(friendshipSchema.pick({ id: true, status: true }))
   .mutation(async ({ input: { id, status }, ctx: { authUser, repos } }) => {
-    const friendship = await repos.friendshipRepository.findById(id)
-
-    if (!friendship) {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Friendship was not found',
-      })
-    }
-
-    const updatedFriendship = await repos.friendshipRepository.updateStatus(
-      id,
-      status
-    )
-
-    if (!updatedFriendship) {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Could not find authorized user profile',
-      })
-    }
-
-    const authorizedUserProfile = await repos.userRepository.findByUserId(
-      authUser.id
-    )
-
-    if (!authorizedUserProfile) {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Could not find authorized user profile',
-      })
-    }
-
     try {
+      if (status === 'pending') {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Friendship cannot be updated to pending',
+        })
+      }
+
+      const friendship = await repos.friendshipRepository.findById(id)
+
+      if (!friendship) {
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Friendship was not found',
+        })
+      }
+
+      // TODO: implement logic about active reservations
+
+      const updatedFriendship = await repos.friendshipRepository.updateStatus(
+        id,
+        status
+      )
+
+      if (!updatedFriendship) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Could not find authorized user profile',
+        })
+      }
       await createNotification(
         'friendship',
         id,
@@ -58,14 +55,10 @@ export default authenticatedProcedure
         authUser.id,
         repos
       )
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(
-        'Failed to create notification for friendship update:',
-        error
-      )
+    } catch {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'An error occurred and friendship was not updated',
+      })
     }
   })
-
-// Update friendship status
-// Create notification

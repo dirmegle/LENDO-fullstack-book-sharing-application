@@ -91,17 +91,26 @@ export const fakeFriendshipWithId = <T extends Partial<Insertable<Friendship>>>(
   ...overrides,
 })
 
-export const fakeNotificationWithId = <
+export const fakeNotificationWithoutId = <
   T extends Partial<Insertable<Notification>>,
 >(
   overrides: T = {} as T
 ) => ({
-  id: random.guid(),
   entityId: random.guid(),
   entityType: 'friendship' as EntityTypeEnum,
   isRead: random.bool(),
   message: random.sentence(),
   triggeredById: random.guid(),
   userId: random.guid(),
+  ...overrides,
+})
+
+export const fakeNotificationWithId = <
+  T extends Partial<Insertable<Notification>>,
+>(
+  overrides: T = {} as T
+) => ({
+  id: random.guid(),
+  ...fakeNotificationWithoutId(),
   ...overrides,
 })

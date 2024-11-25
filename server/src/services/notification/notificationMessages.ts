@@ -6,3 +6,6 @@ export const friendshipAcceptMessage = (authorFullName: string) =>
 
 export const friendshipDeclineMessage = (authorFullName: string) =>
   `User ${authorFullName} has declined your friendship request`
+
+export const friendshipDeletionMessage = (authorFullName: string) =>
+  `User ${authorFullName} has removed you as a friend. You will no longer see their book copies.`

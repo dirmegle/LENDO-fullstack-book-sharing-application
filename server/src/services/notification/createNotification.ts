@@ -4,10 +4,11 @@ import type { EntityTypeEnum, StatusEnum, User } from '../../database/types'
 import {
   friendshipAcceptMessage,
   friendshipDeclineMessage,
+  friendshipDeletionMessage,
   friendshipRequestMessage,
 } from './notificationMessages'
 
-const formulateFrienshipNotification = (
+const formulateFriendshipNotification = (
   status: StatusEnum,
   fromUserFullProfile: User
 ) => {
@@ -20,15 +21,19 @@ const formulateFrienshipNotification = (
     message = friendshipDeclineMessage(fromUserFullName)
   } else if (status === 'pending') {
     message = friendshipRequestMessage(fromUserFullName)
+  } else if (status === 'deleted') {
+    message = friendshipDeletionMessage(fromUserFullName)
+  } else {
+    throw new Error('could not formulate notification message')
   }
 
   return message
 }
 
-// Add logic with commenting feature
+// TODO: Add logic with commenting feature
 const formulateCommentNotification = () => 'Comment notification message'
 
-// Add logic with commenting feature
+// TODO: Add logic with reservation feature
 const formulateReservationNotification = () =>
   'Reservation notification message'
 
@@ -40,7 +45,7 @@ const getNotificationMessage = (
   let notificationMessage
 
   if (entity === 'friendship') {
-    notificationMessage = formulateFrienshipNotification(
+    notificationMessage = formulateFriendshipNotification(
       status,
       fromUserFullProfile
     )

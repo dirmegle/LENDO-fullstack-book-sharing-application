@@ -29,7 +29,7 @@ describe('create', () => {
 })
 
 describe('updateNotificationAsRead', () => {
-  it('changes notification isread to true', async () => {
+  it('changes notification isRead to true', async () => {
     const [existingNotification] = await insertAll(
       db,
       'notification',

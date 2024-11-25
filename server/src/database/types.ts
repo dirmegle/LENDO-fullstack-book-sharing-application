@@ -12,7 +12,7 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>
 
-export type StatusEnum = 'accepted' | 'declined' | 'pending'
+export type StatusEnum = 'accepted' | 'declined' | 'deleted' | 'pending'
 
 export type Timestamp = ColumnType<Date, Date | string>
 

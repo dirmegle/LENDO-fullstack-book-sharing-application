@@ -4,9 +4,9 @@ import { notificationsRepository } from '@server/repositories/notificationsRepos
 import { userRepository } from '@server/repositories/userRepository'
 import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'
-import { friendshipRequestMessage } from '@server/services/notification/notificationMessages'
 import { TRPCError } from '@trpc/server'
 import { v4 as uuidv4 } from 'uuid'
+import createNotification from '@server/services/notification/createNotification'
 
 export default authenticatedProcedure
   .use(
@@ -18,51 +18,40 @@ export default authenticatedProcedure
   )
   .input(friendshipSchema.pick({ toUserId: true }))
   .mutation(async ({ input: { toUserId }, ctx: { authUser, repos } }) => {
-    const existingFriendship =
-      await repos.friendshipRepository.getExistingFriendship(
+    try {
+      const existingFriendship =
+        await repos.friendshipRepository.getExistingFriendship(
+          toUserId,
+          authUser.id
+        )
+
+      if (existingFriendship) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Friendship between these two users already exists',
+        })
+      }
+
+      const newFriendship = await repos.friendshipRepository.create({
+        fromUserId: authUser.id,
         toUserId,
-        authUser.id
+        id: uuidv4(),
+        status: 'pending',
+      })
+
+      await createNotification(
+        'friendship',
+        newFriendship.id,
+        newFriendship.status,
+        newFriendship.toUserId,
+        newFriendship.fromUserId,
+        repos
       )
-
-    if (existingFriendship) {
+    } catch {
       throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Friendship between these two users already exists',
+        code: 'INTERNAL_SERVER_ERROR',
+        message:
+          'Could not create notification about the new friendship request',
       })
-    }
-
-    const authorizedUserProfile = await repos.userRepository.findByUserId(
-      authUser.id
-    )
-
-    if (!authorizedUserProfile) {
-      throw new TRPCError({
-        code: 'BAD_REQUEST',
-        message: 'Could not find authorized user profile',
-      })
-    }
-
-    const newFriendship = await repos.friendshipRepository.create({
-      fromUserId: authUser.id,
-      toUserId,
-      id: uuidv4(),
-      status: 'pending',
-    })
-
-    const newNotification = await repos.notificationsRepository.create({
-      entityId: newFriendship.id,
-      entityType: 'friendship',
-      id: uuidv4(),
-      isRead: false,
-      message: friendshipRequestMessage(
-        `${authorizedUserProfile.firstName} ${authorizedUserProfile.lastName}`
-      ),
-      triggeredById: authUser.id,
-      userId: toUserId,
-    })
-
-    return {
-      friendshipId: newFriendship.id,
-      notificationId: newNotification.id,
     }
   })

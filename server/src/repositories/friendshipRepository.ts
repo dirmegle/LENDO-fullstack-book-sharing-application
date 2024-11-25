@@ -3,21 +3,24 @@ import type { Selectable } from 'kysely'
 
 export function friendshipRepository(db: Database) {
   return {
-    async create(friendship: Friendship): Promise<Pick<Friendship, 'id'>> {
+    async create(friendship: Friendship): Promise<Friendship> {
       return db
         .insertInto('friendship')
         .values(friendship)
-        .returning('id')
+        .returningAll()
         .executeTakeFirstOrThrow()
     },
 
-    async updateStatus(id: string, newStatus: StatusEnum): Promise<Friendship> {
+    async updateStatus(
+      id: string,
+      newStatus: StatusEnum
+    ): Promise<Friendship | undefined> {
       return db
         .updateTable('friendship')
         .set({ status: newStatus })
         .where('id', '=', id)
         .returningAll()
-        .executeTakeFirstOrThrow()
+        .executeTakeFirst()
     },
 
     async getExistingFriendship(

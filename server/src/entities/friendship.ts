@@ -1,7 +1,7 @@
 import type { Friendship } from '@server/database'
 import { z } from 'zod'
 
-export const friendshipStatus = ['pending', 'accepted', 'declined'] as const
+export const friendshipStatus = ['pending', 'accepted', 'declined', 'deleted'] as const
 
 export const friendshipSchema = z.object({
   id: z.string().uuid(),

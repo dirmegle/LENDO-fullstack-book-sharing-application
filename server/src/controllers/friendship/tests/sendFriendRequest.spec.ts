@@ -30,8 +30,8 @@ describe('sendFriendRequest', () => {
   })
   it('creates a friendship with status pending and a notification', async () => {
     const { sendFriendRequest } = createCaller(authContext({ db }, fromUser))
-    const { friendshipId, notificationId } =
-      await sendFriendRequest(correctInput)
+
+    await sendFriendRequest(correctInput)
 
     const [createdNotification] = await selectAll(db, 'notification', (q) =>
       q('notification.triggeredById', '=', fromUser.id)
@@ -40,9 +40,7 @@ describe('sendFriendRequest', () => {
       q('friendship.fromUserId', '=', fromUser.id)
     )
 
-    expect(createdFriendship.id).toEqual(friendshipId)
     expect(createdFriendship.status).toEqual('pending')
-    expect(createdNotification.id).toEqual(notificationId)
     expect(createdNotification.userId).toEqual(toUser.id)
     expect(createdNotification.triggeredById).toBe(fromUser.id)
   })
