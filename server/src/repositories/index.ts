@@ -4,6 +4,7 @@ import { bookRepository } from './bookRepository'
 import { bookCopyRepository } from './bookCopyRepository'
 import { friendshipRepository } from './friendshipRepository'
 import { notificationsRepository } from './notificationsRepository'
+import { reservationsRepository } from './reservationsRepository'
 
 export type RepositoryFactory = <T>(db: Database) => T
 
@@ -14,6 +15,7 @@ const repositories = {
   bookCopyRepository,
   friendshipRepository,
   notificationsRepository,
+  reservationsRepository,
 }
 
 export type RepositoriesFactories = typeof repositories

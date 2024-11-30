@@ -12,6 +12,13 @@ export type Generated<T> =
     ? ColumnType<S, I | undefined, U>
     : ColumnType<T, T | undefined, T>
 
+export type ReservationStatusEnum =
+  | 'cancelled'
+  | 'completed'
+  | 'confirmed'
+  | 'pending'
+  | 'rejected'
+
 export type StatusEnum = 'accepted' | 'declined' | 'deleted' | 'pending'
 
 export type Timestamp = ColumnType<Date, Date | string>
@@ -51,6 +58,15 @@ export interface Notification {
   userId: string
 }
 
+export interface Reservation {
+  bookCopyId: string
+  endDate: Timestamp
+  id: string
+  reserverId: string
+  startDate: Timestamp
+  status: ReservationStatusEnum
+}
+
 export interface User {
   email: string
   firstName: string
@@ -64,5 +80,6 @@ export interface DB {
   bookCopy: BookCopy
   friendship: Friendship
   notification: Notification
+  reservation: Reservation
   user: User
 }

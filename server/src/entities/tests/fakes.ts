@@ -4,12 +4,14 @@ import type {
   EntityTypeEnum,
   Friendship,
   Notification,
+  ReservationStatusEnum,
   StatusEnum,
   User,
 } from '@server/database/types'
 import type { Insertable } from 'kysely'
 import { random } from '@tests/utils/random'
 import type { AuthUser } from '../user'
+import type { ReservationWithISOString } from '../reservation'
 
 /**
  * Generates a fake user with some default test data.
@@ -112,5 +114,28 @@ export const fakeNotificationWithId = <
 ) => ({
   id: random.guid(),
   ...fakeNotificationWithoutId(),
+  ...overrides,
+})
+
+export const fakeReservationWithoutId = <
+  T extends Partial<ReservationWithISOString>,
+>(
+  overrides: T = {} as T
+) => ({
+  bookCopyId: random.guid(),
+  reserverId: random.guid(),
+  status: 'pending' as ReservationStatusEnum,
+  startDate: new Date('2024-11-06').toISOString(),
+  endDate: new Date('2024-12-16').toISOString(),
+  ...overrides,
+})
+
+export const fakeReservationWithId = <
+  T extends Partial<ReservationWithISOString>,
+>(
+  overrides: T = {} as T
+) => ({
+  id: random.guid(),
+  ...fakeReservationWithoutId(),
   ...overrides,
 })
