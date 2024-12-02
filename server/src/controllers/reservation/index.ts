@@ -1,6 +1,7 @@
 import { router } from '@server/trpc'
+import createReservation from './createReservation'
 
-export default router({})
+export default router({createReservation})
 
 // createReservation - send notification based on status, check if doesn't clash with other reservation. util needed
 // updateReservationStatus - send notification based on status
