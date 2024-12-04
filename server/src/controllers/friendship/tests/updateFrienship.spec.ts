@@ -7,11 +7,7 @@ import {
 } from '@server/entities/tests/fakes'
 import { insertAll, selectAll } from '@tests/utils/records'
 import { authContext, requestContext } from '@tests/utils/context'
-import {
-  friendshipAcceptMessage,
-  friendshipDeclineMessage,
-  friendshipDeletionMessage,
-} from '@server/services/notification/notificationMessages'
+import messages from '@server/services/notification/notificationMessages'
 import { random } from '@tests/utils/random'
 import friendshipRouter from '..'
 
@@ -51,7 +47,9 @@ describe('updateFriendship', () => {
 
     expect(updatedFriendship.status).toEqual('accepted')
     expect(createdNotification.message).toEqual(
-      friendshipAcceptMessage(`${fromUser.firstName} ${fromUser.lastName}`)
+      messages.friendshipAcceptMessage(
+        `${fromUser.firstName} ${fromUser.lastName}`
+      )
     )
   })
 
@@ -68,7 +66,9 @@ describe('updateFriendship', () => {
 
     expect(updatedFriendship.status).toEqual('declined')
     expect(createdNotification.message).toEqual(
-      friendshipDeclineMessage(`${fromUser.firstName} ${fromUser.lastName}`)
+      messages.friendshipDeclineMessage(
+        `${fromUser.firstName} ${fromUser.lastName}`
+      )
     )
   })
 
@@ -87,7 +87,9 @@ describe('updateFriendship', () => {
 
     expect(updatedFriendship.status).toEqual('deleted')
     expect(createdNotification.message).toEqual(
-      friendshipDeletionMessage(`${fromUser.firstName} ${fromUser.lastName}`)
+      messages.friendshipDeletionMessage(
+        `${fromUser.firstName} ${fromUser.lastName}`
+      )
     )
   })
 

@@ -20,6 +20,13 @@ export function bookCopyRepository(db: Database) {
         .where('ownerId', '=', ownerId)
         .executeTakeFirst()
     },
+    async getById(id: string): Promise<Selectable<BookCopy> | undefined> {
+      return db
+        .selectFrom('bookCopy')
+        .select(bookCopyKeys)
+        .where('bookCopy.id', '=', id)
+        .executeTakeFirst()
+    },
     async getByISBNAndOwnerId(
       isbn: string,
       ownerId: string

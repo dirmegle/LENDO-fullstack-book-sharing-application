@@ -1,12 +1,12 @@
 import type { Repositories } from '@server/repositories'
 import { v4 as uuidv4 } from 'uuid'
-import type { EntityTypeEnum, StatusEnum, User } from '../../database/types'
-import {
-  friendshipAcceptMessage,
-  friendshipDeclineMessage,
-  friendshipDeletionMessage,
-  friendshipRequestMessage,
-} from './notificationMessages'
+import type {
+  EntityTypeEnum,
+  ReservationStatusEnum,
+  StatusEnum,
+  User,
+} from '../../database/types'
+import messages from './notificationMessages'
 
 const formulateFriendshipNotification = (
   status: StatusEnum,
@@ -16,13 +16,13 @@ const formulateFriendshipNotification = (
   const fromUserFullName = `${fromUserFullProfile.firstName} ${fromUserFullProfile.lastName}`
 
   if (status === 'accepted') {
-    message = friendshipAcceptMessage(fromUserFullName)
+    message = messages.friendshipAcceptMessage(fromUserFullName)
   } else if (status === 'declined') {
-    message = friendshipDeclineMessage(fromUserFullName)
+    message = messages.friendshipDeclineMessage(fromUserFullName)
   } else if (status === 'pending') {
-    message = friendshipRequestMessage(fromUserFullName)
+    message = messages.friendshipRequestMessage(fromUserFullName)
   } else if (status === 'deleted') {
-    message = friendshipDeletionMessage(fromUserFullName)
+    message = messages.friendshipDeletionMessage(fromUserFullName)
   } else {
     throw new Error('could not formulate notification message')
   }
@@ -33,26 +33,57 @@ const formulateFriendshipNotification = (
 // TODO: Add logic with commenting feature
 const formulateCommentNotification = () => 'Comment notification message'
 
-// TODO: Add logic with reservation feature
-const formulateReservationNotification = () =>
-  'Reservation notification message'
+const formulateReservationNotification = (
+  status: ReservationStatusEnum,
+  fromUserFullProfile: User,
+  bookName: string
+) => {
+  let message
+  const fromUserFullName = `${fromUserFullProfile.firstName} ${fromUserFullProfile.lastName}`
+
+  if (status === 'pending') {
+    message = messages.reservationPendingMessage(fromUserFullName, bookName)
+  } else if (status === 'cancelled') {
+    message = messages.reservationCancelledMessage(fromUserFullName, bookName)
+  } else if (status === 'completed') {
+    message = messages.reservationCompletedMessage(fromUserFullName, bookName)
+  } else if (status === 'confirmed') {
+    message = messages.reservationConfirmedMessage(fromUserFullName, bookName)
+  } else if (status === 'rejected') {
+    message = messages.reservationRejectedMessage(fromUserFullName, bookName)
+  } else {
+    throw new Error('could not formulate notification message')
+  }
+
+  return message
+}
 
 const getNotificationMessage = (
   entity: EntityTypeEnum,
-  status: StatusEnum,
-  fromUserFullProfile: User
+  status: StatusEnum | ReservationStatusEnum,
+  fromUserFullProfile: User,
+  bookName?: string
 ) => {
   let notificationMessage
 
   if (entity === 'friendship') {
     notificationMessage = formulateFriendshipNotification(
-      status,
+      status as StatusEnum,
       fromUserFullProfile
     )
   } else if (entity === 'comment') {
     notificationMessage = formulateCommentNotification()
   } else if (entity === 'reservation') {
-    notificationMessage = formulateReservationNotification()
+    if (!bookName) {
+      throw new Error(
+        'Book name must be provided for reservation notifications'
+      )
+    }
+    notificationMessage = formulateReservationNotification(
+      status as ReservationStatusEnum,
+      fromUserFullProfile,
+      bookName
+    )
   } else {
     throw new Error('Entity must be one of friendship, comment or reservation')
   }
@@ -63,10 +94,14 @@ const getNotificationMessage = (
 const createNotification = async (
   entity: EntityTypeEnum,
   entityId: string,
-  status: StatusEnum,
+  status: StatusEnum | ReservationStatusEnum,
   toUserId: string,
   fromUserId: string,
-  repos: Pick<Repositories, 'notificationsRepository' | 'userRepository'>
+  repos: Pick<
+    Repositories,
+    'notificationsRepository' | 'userRepository' | 'bookRepository'
+  >,
+  isbn?: string
 ) => {
   const fromUserFullProfile =
     await repos.userRepository.findByUserId(fromUserId)
@@ -77,11 +112,22 @@ const createNotification = async (
     )
   }
 
+  let bookData
+
+  if (!isbn && entity === 'reservation') {
+    throw new Error(
+      'ISBN must be provided for notifications with entity type Reservation'
+    )
+  } else if (isbn) {
+    bookData = await repos.bookRepository.findByISBN(isbn)
+  }
+
   try {
     const notificationMessage = getNotificationMessage(
       entity,
       status,
-      fromUserFullProfile
+      fromUserFullProfile,
+      bookData?.title
     )
 
     await repos.notificationsRepository.create({

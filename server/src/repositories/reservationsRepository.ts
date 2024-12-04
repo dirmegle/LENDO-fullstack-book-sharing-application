@@ -113,10 +113,22 @@ export function reservationsRepository(db: Database) {
       return mapISOStringsToReservationArray(reservations)
     },
 
+    // async getReservationById(
+    //   id: string
+    // ): Promise<Selectable<ReservationWithISOString>> {
+    //   const reservation = await db
+    //     .selectFrom('reservation')
+    //     .selectAll()
+    //     .where('id', '=', id)
+    //     .executeTakeFirstOrThrow()
+
+    //   return mapISOStringsSingleReservation(reservation)
+    // },
+
     async updateStatus(
       id: string,
       status: ReservationStatusEnum
-    ): Promise<Updateable<ReservationWithISOString>> {
+    ): Promise<ReservationWithISOString> {
       const updatedReservation = await db
         .updateTable('reservation')
         .set({ status })

@@ -125,8 +125,8 @@ export const fakeReservationWithoutId = <
   bookCopyId: random.guid(),
   reserverId: random.guid(),
   status: 'pending' as ReservationStatusEnum,
-  startDate: new Date('2024-11-06').toISOString(),
-  endDate: new Date('2024-12-16').toISOString(),
+  startDate: new Date('2025-11-06').toISOString(),
+  endDate: new Date('2025-12-16').toISOString(),
   ...overrides,
 })
 

@@ -9,7 +9,7 @@ import { insertAll, selectAll } from '@tests/utils/records'
 import { userRepository } from '@server/repositories/userRepository'
 import { random } from '@tests/utils/random'
 import createNotification from '../createNotification'
-import { friendshipRequestMessage } from '../notificationMessages'
+import messages from '../notificationMessages'
 
 const db = await wrapInRollbacks(createTestDatabase())
 const notificationsRepo = notificationsRepository(db)
@@ -42,7 +42,7 @@ describe('createNotification', () => {
       q('notification.triggeredById', '=', fromUser.id)
     )
 
-    const message = friendshipRequestMessage(
+    const message = messages.friendshipRequestMessage(
       `${fromUser.firstName} ${fromUser.lastName}`
     )
 

@@ -7,6 +7,7 @@ import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from '@trpc/server'
 import { v4 as uuidv4 } from 'uuid'
 import createNotification from '@server/services/notification/createNotification'
+import { bookRepository } from '@server/repositories/bookRepository'
 
 export default authenticatedProcedure
   .use(
@@ -14,6 +15,7 @@ export default authenticatedProcedure
       friendshipRepository,
       notificationsRepository,
       userRepository,
+      bookRepository
     })
   )
   .input(friendshipSchema.pick({ toUserId: true }))
