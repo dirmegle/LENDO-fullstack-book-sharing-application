@@ -1,8 +1,8 @@
 import { router } from '@server/trpc'
 import createReservation from './createReservation'
-import updateReservationStatusByOwner from './updateReservationStatusByOwner'
+import updateReservationStatus from './updateReservationStatus'
 
-export default router({ createReservation, updateReservationStatusByOwner })
+export default router({ createReservation, updateReservationStatusByOwner: updateReservationStatus })
 
 // updateReservationStatus - send notification based on status
 // changeReservationDate - check if doesn't clash with other reservation

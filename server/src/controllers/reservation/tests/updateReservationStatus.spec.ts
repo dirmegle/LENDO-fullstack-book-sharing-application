@@ -54,9 +54,9 @@ describe('updateReservationStatus', () => {
       })
     ).rejects.toThrow(/unauthenticated/i)
   })
-  it('updates reservation status to confirmed if input is correct and creates notification', async () => {
+  it('updates reservation status to confirmed if authUser is the owner and creates notification', async () => {
     const { updateReservationStatusByOwner } = createCaller(
-      authContext({ db }, reserverUser)
+      authContext({ db }, ownerUser)
     )
 
     await updateReservationStatusByOwner({
@@ -70,18 +70,19 @@ describe('updateReservationStatus', () => {
     )
 
     const [createdNotification] = await selectAll(db, 'notification', (q) =>
-      q('notification.triggeredById', '=', reserverUser.id)
+      q('notification.triggeredById', '=', ownerUser.id)
     )
 
     expect(updatedReservation.status).toEqual('confirmed')
     expect(createdNotification.message).toEqual(
       messages.reservationConfirmedMessage(
-        `${reserverUser.firstName} ${reserverUser.lastName}`,
+        `${ownerUser.firstName} ${ownerUser.lastName}`,
         book.title
       )
     )
   })
-  it('updates reservation status to cancelled if input is correct and creates notification', async () => {
+
+  it('updates reservation status to cancelled if authUser is the reserver and creates notification', async () => {
     const { updateReservationStatusByOwner } = createCaller(
       authContext({ db }, reserverUser)
     )
@@ -108,60 +109,21 @@ describe('updateReservationStatus', () => {
       )
     )
   })
-  it('updates reservation status to completed if input is correct and creates notification', async () => {
+
+  it('throws an error if authUser is the reserver and tries to update status to confirmed', async () => {
     const { updateReservationStatusByOwner } = createCaller(
       authContext({ db }, reserverUser)
     )
 
-    await updateReservationStatusByOwner({
-      id: existingReservation.id,
-      status: 'completed',
-      bookCopyId: existingReservation.bookCopyId,
-    })
-
-    const [updatedReservation] = await selectAll(db, 'reservation', (q) =>
-      q('reservation.id', '=', existingReservation.id)
-    )
-
-    const [createdNotification] = await selectAll(db, 'notification', (q) =>
-      q('notification.triggeredById', '=', reserverUser.id)
-    )
-
-    expect(updatedReservation.status).toEqual('completed')
-    expect(createdNotification.message).toEqual(
-      messages.reservationCompletedMessage(
-        `${reserverUser.firstName} ${reserverUser.lastName}`,
-        book.title
-      )
-    )
+    await expect(
+      updateReservationStatusByOwner({
+        id: existingReservation.id,
+        status: 'confirmed',
+        bookCopyId: existingReservation.bookCopyId,
+      })
+    ).rejects.toThrow()
   })
-  it('updates reservation status to rejected if input is correct and creates notification', async () => {
-    const { updateReservationStatusByOwner } = createCaller(
-      authContext({ db }, reserverUser)
-    )
 
-    await updateReservationStatusByOwner({
-      id: existingReservation.id,
-      status: 'rejected',
-      bookCopyId: existingReservation.bookCopyId,
-    })
-
-    const [updatedReservation] = await selectAll(db, 'reservation', (q) =>
-      q('reservation.id', '=', existingReservation.id)
-    )
-
-    const [createdNotification] = await selectAll(db, 'notification', (q) =>
-      q('notification.triggeredById', '=', reserverUser.id)
-    )
-
-    expect(updatedReservation.status).toEqual('rejected')
-    expect(createdNotification.message).toEqual(
-      messages.reservationRejectedMessage(
-        `${reserverUser.firstName} ${reserverUser.lastName}`,
-        book.title
-      )
-    )
-  })
   it('throws an error if reservation does not exist', async () => {
     const { updateReservationStatusByOwner } = createCaller(
       authContext({ db }, reserverUser)
@@ -171,6 +133,20 @@ describe('updateReservationStatus', () => {
       updateReservationStatusByOwner({
         id: random.guid(),
         status: 'confirmed',
+        bookCopyId: existingReservation.bookCopyId,
+      })
+    ).rejects.toThrow()
+  })
+
+  it('throws an error input status is pending', async () => {
+    const { updateReservationStatusByOwner } = createCaller(
+      authContext({ db }, reserverUser)
+    )
+
+    await expect(
+      updateReservationStatusByOwner({
+        id: existingReservation.id,
+        status: 'pending',
         bookCopyId: existingReservation.bookCopyId,
       })
     ).rejects.toThrow()

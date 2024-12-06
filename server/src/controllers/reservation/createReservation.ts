@@ -23,50 +23,50 @@ export default authenticatedProcedure
   )
   .input(reservationSchema.omit({ id: true, reserverId: true }))
   .mutation(async ({ input: reservation, ctx: { authUser, repos } }) => {
-    try {
-      if (new Date(reservation.startDate) > new Date(reservation.endDate)) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Start date cannot be later than end date',
-        })
-      }
+    if (new Date(reservation.startDate) > new Date(reservation.endDate)) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Start date cannot be later than end date',
+      })
+    }
 
-      const existingBookCopy = await repos.bookCopyRepository.getById(
+    const existingBookCopy = await repos.bookCopyRepository.getById(
+      reservation.bookCopyId
+    )
+
+    if (!existingBookCopy) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Book copy for this reservation does not exist',
+      })
+    }
+
+    const existingReservations =
+      await repos.reservationsRepository.getDatesByBookCopyId(
         reservation.bookCopyId
       )
 
-      if (!existingBookCopy) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Book copy for this reservation does not exist',
-        })
-      }
-
-      const existingReservations =
-        await repos.reservationsRepository.getDatesByBookCopyId(
-          reservation.bookCopyId
-        )
-
-      if (
-        !areDatesAvailable(
-          reservation.startDate,
-          reservation.endDate,
-          existingReservations
-        )
-      ) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message:
-            'Requested reservation dates overlap with existing reservations',
-        })
-      }
-
-      const createdReservation = await repos.reservationsRepository.create({
-        ...reservation,
-        id: uuidv4(),
-        reserverId: authUser.id,
+    if (
+      !areDatesAvailable(
+        reservation.startDate,
+        reservation.endDate,
+        existingReservations
+      )
+    ) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message:
+          'Requested reservation dates overlap with existing reservations',
       })
+    }
 
+    const createdReservation = await repos.reservationsRepository.create({
+      ...reservation,
+      id: uuidv4(),
+      reserverId: authUser.id,
+    })
+
+    try {
       await createNotification(
         'reservation',
         createdReservation.id,
@@ -76,8 +76,6 @@ export default authenticatedProcedure
         repos,
         existingBookCopy.isbn
       )
-
-      return createdReservation
     } catch {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
@@ -85,4 +83,6 @@ export default authenticatedProcedure
           'Could not create notification for the new reservation request',
       })
     }
+
+    return createdReservation
   })
