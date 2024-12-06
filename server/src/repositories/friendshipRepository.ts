@@ -48,5 +48,36 @@ export function friendshipRepository(db: Database) {
 
       return friendship
     },
+
+    async areAnyReservationsActive(
+      userId1: string,
+      userId2: string
+    ): Promise<boolean> {
+      const activeReservations = await db
+        .selectFrom('reservation')
+        .innerJoin('bookCopy', 'bookCopy.id', 'reservation.bookCopyId')
+        .select(['reservation.id'])
+        .where((eb) =>
+          eb.or([
+            eb('reservation.reserverId', '=', userId1).and(
+              'bookCopy.ownerId',
+              '=',
+              userId2
+            ),
+            eb('reservation.reserverId', '=', userId2).and(
+              'bookCopy.ownerId',
+              '=',
+              userId1
+            ),
+          ])
+        )
+        .execute()
+
+      if (activeReservations.length > 0) {
+        return true
+      }
+
+      return false
+    },
   }
 }

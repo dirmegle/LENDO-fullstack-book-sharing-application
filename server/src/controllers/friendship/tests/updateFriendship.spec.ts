@@ -2,7 +2,10 @@ import { createCallerFactory } from '@server/trpc'
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import {
+  fakeBook,
+  fakeBookCopyWithId,
   fakeFriendshipWithId,
+  fakeReservationWithId,
   fakeUserWithId,
 } from '@server/entities/tests/fakes'
 import { insertAll, selectAll } from '@tests/utils/records'
@@ -21,9 +24,19 @@ const friendship = fakeFriendshipWithId({
   toUserId: toUser.id,
 })
 
-beforeAll(() => {
-  insertAll(db, 'user', [fromUser, toUser])
-  insertAll(db, 'friendship', [friendship])
+const book = fakeBook()
+
+const bookCopy = fakeBookCopyWithId({
+  isbn: book.isbn,
+  ownerId: fromUser.id,
+  isLendable: true,
+})
+
+beforeAll(async () => {
+  await insertAll(db, 'user', [fromUser, toUser])
+  await insertAll(db, 'friendship', [friendship])
+  await insertAll(db, 'book', [book])
+  await insertAll(db, 'bookCopy', [bookCopy])
 })
 
 describe('updateFriendship', () => {
@@ -72,9 +85,18 @@ describe('updateFriendship', () => {
     )
   })
 
-  // TODO: add additional logic regarding deletion and reservation
+  it('throws an error if status is deleted and there are existing reservations', async () => {
+    await insertAll(db, 'reservation', [
+      fakeReservationWithId({ reserverId: toUser.id, bookCopyId: bookCopy.id }),
+    ])
 
-  it('updates friendship with deleted status and creates notification', async () => {
+    const { updateFriendship } = createCaller(authContext({ db }, fromUser))
+    await expect(
+      updateFriendship({ id: friendship.id, status: 'deleted' })
+    ).rejects.toThrow()
+  })
+
+  it('updates friendship with deleted status if there are no existing reservations and creates notification', async () => {
     const { updateFriendship } = createCaller(authContext({ db }, fromUser))
     await updateFriendship({ id: friendship.id, status: 'deleted' })
 

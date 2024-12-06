@@ -6,6 +6,7 @@ import { authenticatedProcedure } from '@server/trpc/authenticatedProcedure'
 import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from '@trpc/server'
 import createNotification from '@server/services/notification/createNotification'
+import { bookRepository } from '@server/repositories/bookRepository'
 
 export default authenticatedProcedure
   .use(
@@ -13,52 +14,67 @@ export default authenticatedProcedure
       friendshipRepository,
       notificationsRepository,
       userRepository,
+      bookRepository,
     })
   )
   .input(friendshipSchema.pick({ id: true, status: true }))
   .mutation(async ({ input: { id, status }, ctx: { authUser, repos } }) => {
-    try {
-      if (status === 'pending') {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Friendship cannot be updated to pending',
-        })
-      }
+    if (status === 'pending') {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Friendship cannot be updated to pending',
+      })
+    }
 
-      const friendship = await repos.friendshipRepository.findById(id)
+    const friendship = await repos.friendshipRepository.findById(id)
 
-      if (!friendship) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: 'Friendship was not found',
-        })
-      }
+    if (!friendship) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message: 'Friendship was not found',
+      })
+    }
 
-      // TODO: implement logic about active reservations
-
-      const updatedFriendship = await repos.friendshipRepository.updateStatus(
-        id,
-        status
+    const activeReservations =
+      await repos.friendshipRepository.areAnyReservationsActive(
+        friendship.fromUserId,
+        friendship.toUserId
       )
 
-      if (!updatedFriendship) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Could not find authorized user profile',
-        })
-      }
+    if (status === 'deleted' && activeReservations) {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message:
+          'Cannot delete friendship due to active book reservations. Cancel or complete the reservations',
+      })
+    }
+
+    try {
       await createNotification(
         'friendship',
         id,
         status,
-        updatedFriendship.toUserId,
+        friendship.toUserId,
         authUser.id,
         repos
       )
     } catch {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
-        message: 'An error occurred and friendship was not updated',
+        message:
+          'An error occurred and notification was not created, friendship was not updated',
+      })
+    }
+
+    const updatedFriendship = await repos.friendshipRepository.updateStatus(
+      id,
+      status
+    )
+
+    if (!updatedFriendship) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Could not update friendship',
       })
     }
   })
