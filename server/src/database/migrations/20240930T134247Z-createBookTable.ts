@@ -14,9 +14,7 @@ export async function up(db: Kysely<any>) {
   await db.schema
     .createTable('book_copy')
     .addColumn('id', 'uuid', (c) => c.primaryKey().notNull())
-    .addColumn('isbn', 'varchar', (c) =>
-      c.references('book.isbn').notNull().unique()
-    )
+    .addColumn('isbn', 'varchar', (c) => c.references('book.isbn').notNull())
     .addColumn('owner_id', 'uuid', (c) => c.references('user.id').notNull())
     .addColumn('is_lendable', 'boolean', (c) => c.notNull())
     .addColumn('is_available', 'boolean', (c) => c.notNull())
