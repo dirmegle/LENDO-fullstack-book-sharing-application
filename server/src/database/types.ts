@@ -40,6 +40,15 @@ export interface BookCopy {
   ownerId: string
 }
 
+export interface Comment {
+  content: string
+  createdAt: Generated<Timestamp>
+  id: string
+  isbn: string
+  public: boolean
+  userId: string
+}
+
 export interface Friendship {
   fromUserId: string
   id: string
@@ -78,6 +87,7 @@ export interface User {
 export interface DB {
   book: Book
   bookCopy: BookCopy
+  comment: Comment
   friendship: Friendship
   notification: Notification
   reservation: Reservation

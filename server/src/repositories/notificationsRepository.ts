@@ -26,5 +26,3 @@ export function notificationsRepository(db: Database) {
     },
   }
 }
-
-// getNotifiationsByUserId

@@ -1,6 +1,7 @@
 import type {
   Book,
   BookCopy,
+  Comment,
   EntityTypeEnum,
   Friendship,
   Notification,
@@ -137,5 +138,23 @@ export const fakeReservationWithId = <
 ) => ({
   id: random.guid(),
   ...fakeReservationWithoutId(),
+  ...overrides,
+})
+
+export const fakeCommentWithoutId = <T extends Partial<Insertable<Comment>>>(
+  overrides: T = {} as T
+) => ({
+  isbn: String(random.integer({ min: 1000000000, max: 9999999999 })),
+  userId: random.guid(),
+  content: random.string(),
+  public: random.bool(),
+  ...overrides,
+})
+
+export const fakeCommentWithId = <T extends Partial<Comment>>(
+  overrides: T = {} as T
+) => ({
+  id: random.guid(),
+  ...fakeCommentWithoutId(),
   ...overrides,
 })
