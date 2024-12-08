@@ -8,12 +8,14 @@ import {
 import { insertAll, selectAll } from '@tests/utils/records'
 import { userRepository } from '@server/repositories/userRepository'
 import { random } from '@tests/utils/random'
+import { bookRepository } from '@server/repositories/bookRepository'
 import createNotification from '../createNotification'
 import messages from '../notificationMessages'
 
 const db = await wrapInRollbacks(createTestDatabase())
 const notificationsRepo = notificationsRepository(db)
 const userRepo = userRepository(db)
+const bookRepo = bookRepository(db)
 
 const fromUser = fakeUserWithId()
 const toUser = fakeUserWithId()
@@ -35,7 +37,11 @@ describe('createNotification', () => {
       friendship.status,
       toUser.id,
       fromUser.id,
-      { notificationsRepository: notificationsRepo, userRepository: userRepo }
+      {
+        notificationsRepository: notificationsRepo,
+        userRepository: userRepo,
+        bookRepository: bookRepo,
+      }
     )
 
     const [newNotification] = await selectAll(db, 'notification', (q) =>
@@ -63,7 +69,11 @@ describe('createNotification', () => {
         friendship.status,
         toUser.id,
         random.guid(),
-        { notificationsRepository: notificationsRepo, userRepository: userRepo }
+        {
+          notificationsRepository: notificationsRepo,
+          userRepository: userRepo,
+          bookRepository: bookRepo,
+        }
       )
     ).rejects.toThrow()
   })

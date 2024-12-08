@@ -1,6 +1,8 @@
 import { router } from '@server/trpc'
+import createComment from './createComment'
+import updateComment from './updateComment'
 
-export default router({})
+export default router({ createComment, updateComment })
 
 // createComment
 // editComment

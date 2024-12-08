@@ -30,9 +30,6 @@ const formulateFriendshipNotification = (
   return message
 }
 
-// TODO: Add logic with commenting feature
-const formulateCommentNotification = () => 'Comment notification message'
-
 const formulateReservationNotification = (
   status: ReservationStatusEnum,
   fromUserFullProfile: User,
@@ -71,8 +68,6 @@ const getNotificationMessage = (
       status as StatusEnum,
       fromUserFullProfile
     )
-  } else if (entity === 'comment') {
-    notificationMessage = formulateCommentNotification()
   } else if (entity === 'reservation') {
     if (!bookName) {
       throw new Error(

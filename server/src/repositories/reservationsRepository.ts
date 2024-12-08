@@ -1,28 +1,12 @@
 import type { Database, ReservationStatusEnum } from '@server/database'
 import { type ReservationWithISOString } from '@server/entities/reservation'
 import type { Selectable, Updateable } from 'kysely'
+import {
+  mapISOStringObjectArray,
+  mapISOStringSingleObject,
+} from './utils/returnWithISOStrings'
 
-type ReturnedReservation = {
-  id: string
-  bookCopyId: string
-  reserverId: string
-  startDate: Date
-  endDate: Date
-  status: ReservationStatusEnum
-}
-
-const mapISOStringsSingleReservation = (reservation: ReturnedReservation) => ({
-  ...reservation,
-  startDate: reservation.startDate.toISOString(),
-  endDate: reservation.endDate.toISOString(),
-})
-
-const mapISOStringsToReservationArray = (reservations: ReturnedReservation[]) =>
-  reservations.map((reservation) => ({
-    ...reservation,
-    startDate: new Date(reservation.startDate).toISOString(),
-    endDate: new Date(reservation.endDate).toISOString(),
-  }))
+const dateProperties = ['startDate', 'endDate']
 
 export function reservationsRepository(db: Database) {
   return {
@@ -49,7 +33,10 @@ export function reservationsRepository(db: Database) {
         .returningAll()
         .executeTakeFirstOrThrow()
 
-      return mapISOStringsSingleReservation(savedReservation)
+      return mapISOStringSingleObject(
+        savedReservation,
+        dateProperties
+      ) as ReservationWithISOString
     },
 
     async getReservationsByBookCopyId(
@@ -61,7 +48,10 @@ export function reservationsRepository(db: Database) {
         .where('bookCopyId', '=', bookCopyId)
         .execute()
 
-      return mapISOStringsToReservationArray(reservations)
+      return mapISOStringObjectArray(
+        reservations,
+        dateProperties
+      ) as ReservationWithISOString[]
     },
 
     async getDatesByBookCopyId(
@@ -98,7 +88,10 @@ export function reservationsRepository(db: Database) {
         .where('bookCopy.ownerId', '=', ownerId)
         .execute()
 
-      return mapISOStringsToReservationArray(reservations)
+      return mapISOStringObjectArray(
+        reservations,
+        dateProperties
+      ) as ReservationWithISOString[]
     },
 
     async getReservationsByReserverId(
@@ -110,7 +103,10 @@ export function reservationsRepository(db: Database) {
         .where('reserverId', '=', reserverId)
         .execute()
 
-      return mapISOStringsToReservationArray(reservations)
+      return mapISOStringObjectArray(
+        reservations,
+        dateProperties
+      ) as ReservationWithISOString[]
     },
 
     async getReservationById(
@@ -122,7 +118,10 @@ export function reservationsRepository(db: Database) {
         .where('id', '=', id)
         .executeTakeFirstOrThrow()
 
-      return mapISOStringsSingleReservation(reservation)
+      return mapISOStringSingleObject(
+        reservation,
+        dateProperties
+      ) as ReservationWithISOString
     },
 
     async updateStatus(
@@ -136,7 +135,10 @@ export function reservationsRepository(db: Database) {
         .returningAll()
         .executeTakeFirstOrThrow()
 
-      return mapISOStringsSingleReservation(updatedReservation)
+      return mapISOStringSingleObject(
+        updatedReservation,
+        dateProperties
+      ) as ReservationWithISOString
     },
 
     async updateDates(
@@ -155,7 +157,10 @@ export function reservationsRepository(db: Database) {
         .returningAll()
         .executeTakeFirstOrThrow()
 
-      return mapISOStringsSingleReservation(updatedReservation)
+      return mapISOStringSingleObject(
+        updatedReservation,
+        dateProperties
+      ) as ReservationWithISOString
     },
   }
 }

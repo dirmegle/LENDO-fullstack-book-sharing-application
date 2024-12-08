@@ -12,3 +12,5 @@ export const commentSchema = z.object({
 export type CommentWithISOCreatedAt = Omit<Comment, 'createdAt'> & {
   createdAt: string
 }
+
+export const commentKeys = Object.keys(commentSchema.shape) as (keyof Comment)[]

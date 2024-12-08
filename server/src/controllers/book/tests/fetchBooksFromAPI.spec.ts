@@ -15,15 +15,6 @@ const { fetchBooksFromAPI } = createCaller(authContext({ db }, user))
 
 const mockedBookData = fakeBook()
 
-// const mockedBookData = {
-//   author: 'Jane Austen',
-//   title: 'Pride and prejudice',
-//   coverImage: 'https://www.coverimage.com',
-//   description: 'About pride and prejudice',
-//   isbn: '1234567891',
-//   pageCount: 150,
-// }
-
 vi.mock('@server/controllers/book/utils/fetchBooks', () => ({
   default: vitest.fn().mockImplementation((request: BookRequest) => {
     const { author, title, isbn } = request

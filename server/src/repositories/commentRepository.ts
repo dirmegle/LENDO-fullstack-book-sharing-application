@@ -38,6 +38,22 @@ export function commentRepository(db: Database) {
       return mapISOStringSingleObject(comment, ['createdAt'])
     },
 
+    async getById(id: string): Promise<CommentWithISOCreatedAt | undefined> {
+      const comment = await db
+        .selectFrom('comment')
+        .selectAll()
+        .where('comment.id', '=', id)
+        .executeTakeFirst()
+
+      if (comment) {
+        return mapISOStringSingleObject(comment, [
+          'createdAt',
+        ]) as CommentWithISOCreatedAt
+      }
+
+      return undefined
+    },
+
     async getByBook(
       isbn: string,
       userId: string
