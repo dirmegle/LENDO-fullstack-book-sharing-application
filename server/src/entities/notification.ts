@@ -20,3 +20,7 @@ export const notificationSchema = z.object({
 export const notificationKeys = Object.keys(
   notificationSchema.shape
 ) as (keyof Notification)[]
+
+export type NotificationWithISOCreatedAt = Omit<Notification, 'createdAt'> & {
+  createdAt: string
+}

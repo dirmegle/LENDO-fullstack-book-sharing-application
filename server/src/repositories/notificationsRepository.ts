@@ -1,6 +1,8 @@
 import type { Database } from '@server/database'
 import type { Notification } from '@server/database/types'
+import type { NotificationWithISOCreatedAt } from '@server/entities/notification'
 import type { Updateable } from 'kysely'
+import { mapISOStringObjectArray } from './utils/returnWithISOStrings'
 
 export function notificationsRepository(db: Database) {
   return {
@@ -23,6 +25,20 @@ export function notificationsRepository(db: Database) {
         .where('id', '=', id)
         .returningAll()
         .executeTakeFirst()
+    },
+
+    async getNotificationsByUser(
+      userId: string
+    ): Promise<NotificationWithISOCreatedAt[]> {
+      const notifications = await db
+        .selectFrom('notification')
+        .selectAll()
+        .where('notification.userId', '=', userId)
+        .execute()
+
+      return mapISOStringObjectArray(notifications, [
+        'createdAt',
+      ]) as NotificationWithISOCreatedAt[]
     },
   }
 }
