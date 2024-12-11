@@ -3,9 +3,14 @@
     "inauthor",
     "intitle",
     "is_lendable",
+    "lendees",
     "lendo",
+    "Postgre",
+    "shadcn",
     "superjson",
+    "supersecretkey",
     "typecheck",
-    "uuidv"
+    "uuidv",
+    "WXDAPKU"
   ]
 }

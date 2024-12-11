@@ -15,32 +15,32 @@ export default authenticatedProcedure
       friendshipRepository,
       notificationsRepository,
       userRepository,
-      bookRepository
+      bookRepository,
     })
   )
   .input(friendshipSchema.pick({ toUserId: true }))
   .mutation(async ({ input: { toUserId }, ctx: { authUser, repos } }) => {
-    try {
-      const existingFriendship =
-        await repos.friendshipRepository.getExistingFriendship(
-          toUserId,
-          authUser.id
-        )
-
-      if (existingFriendship) {
-        throw new TRPCError({
-          code: 'BAD_REQUEST',
-          message: 'Friendship between these two users already exists',
-        })
-      }
-
-      const newFriendship = await repos.friendshipRepository.create({
-        fromUserId: authUser.id,
+    const existingFriendship =
+      await repos.friendshipRepository.getExistingFriendship(
         toUserId,
-        id: uuidv4(),
-        status: 'pending',
-      })
+        authUser.id
+      )
 
+    if (existingFriendship) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Friendship between these two users already exists',
+      })
+    }
+
+    const newFriendship = await repos.friendshipRepository.create({
+      fromUserId: authUser.id,
+      toUserId,
+      id: uuidv4(),
+      status: 'pending',
+    })
+
+    try {
       await createNotification(
         'friendship',
         newFriendship.id,
@@ -56,4 +56,6 @@ export default authenticatedProcedure
           'Could not create notification about the new friendship request',
       })
     }
+
+    return newFriendship
   })

@@ -50,14 +50,25 @@ export default authenticatedProcedure
     }
 
     try {
-      await createNotification(
-        'friendship',
-        id,
-        status,
-        friendship.toUserId,
-        authUser.id,
-        repos
-      )
+      if (status === 'deleted' && authUser.id === friendship.fromUserId) {
+        await createNotification(
+          'friendship',
+          id,
+          status,
+          friendship.toUserId,
+          authUser.id,
+          repos
+        )
+      } else {
+        await createNotification(
+          'friendship',
+          id,
+          status,
+          friendship.fromUserId,
+          authUser.id,
+          repos
+        )
+      }
     } catch {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
