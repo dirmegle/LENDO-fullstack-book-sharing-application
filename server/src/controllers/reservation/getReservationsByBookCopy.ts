@@ -10,7 +10,7 @@ export default authenticatedProcedure
     })
   )
   .input(reservationSchema.pick({ bookCopyId: true }))
-  .mutation(async ({ input: { bookCopyId }, ctx: { repos } }) => {
+  .query(async ({ input: { bookCopyId }, ctx: { repos } }) => {
     const reservations =
       await repos.reservationsRepository.getReservationsByBookCopyId(bookCopyId)
 

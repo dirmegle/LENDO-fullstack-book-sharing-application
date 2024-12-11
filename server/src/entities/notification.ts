@@ -1,11 +1,7 @@
 import type { Notification } from '@server/database'
 import { z } from 'zod'
 
-export const notificationTypes = [
-  'friendship',
-  'reservation',
-  'comment',
-] as const
+export const notificationTypes = ['friendship', 'reservation'] as const
 
 export const notificationSchema = z.object({
   id: z.string().uuid(),

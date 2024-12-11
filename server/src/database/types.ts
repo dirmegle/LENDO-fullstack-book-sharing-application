@@ -5,7 +5,13 @@
 
 import type { ColumnType } from 'kysely'
 
-export type EntityTypeEnum = 'comment' | 'friendship' | 'reservation'
+export type EntityTypeEnum = 'friendship' | 'reservation'
+
+export type FriendshipStatusEnum =
+  | 'accepted'
+  | 'declined'
+  | 'deleted'
+  | 'pending'
 
 export type Generated<T> =
   T extends ColumnType<infer S, infer I, infer U>
@@ -18,8 +24,6 @@ export type ReservationStatusEnum =
   | 'confirmed'
   | 'pending'
   | 'rejected'
-
-export type StatusEnum = 'accepted' | 'declined' | 'deleted' | 'pending'
 
 export type Timestamp = ColumnType<Date, Date | string>
 
@@ -52,7 +56,7 @@ export interface Comment {
 export interface Friendship {
   fromUserId: string
   id: string
-  status: StatusEnum
+  status: FriendshipStatusEnum
   toUserId: string
 }
 

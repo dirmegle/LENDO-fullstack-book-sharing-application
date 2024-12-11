@@ -5,7 +5,7 @@ const friendshipStatusMutable = [...friendshipStatus]
 
 export async function up(db: Kysely<any>) {
   await db.schema
-    .createType('status_enum')
+    .createType('friendship_status_enum')
     .asEnum(friendshipStatusMutable)
     .execute()
 
@@ -14,11 +14,11 @@ export async function up(db: Kysely<any>) {
     .addColumn('id', 'uuid', (c) => c.primaryKey().notNull())
     .addColumn('from_user_id', 'uuid', (c) => c.references('user.id').notNull())
     .addColumn('to_user_id', 'uuid', (c) => c.references('user.id').notNull())
-    .addColumn('status', sql`status_enum`, (c) => c.notNull())
+    .addColumn('status', sql`friendship_status_enum`, (c) => c.notNull())
     .execute()
 }
 
 export async function down(db: Kysely<any>) {
-  await db.schema.dropType('status_enum').execute()
+  await db.schema.dropType('friendship_status_enum').execute()
   await db.schema.dropTable('friendship').execute()
 }

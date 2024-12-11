@@ -12,7 +12,7 @@ export default authenticatedProcedure
     })
   )
   .input(inputSchema)
-  .mutation(async ({ input: { role }, ctx: { repos, authUser } }) => {
+  .query(async ({ input: { role }, ctx: { repos, authUser } }) => {
     const reservations =
       role === 'owner'
         ? await repos.reservationsRepository.getReservationsByOwnerId(

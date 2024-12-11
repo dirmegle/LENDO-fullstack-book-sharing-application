@@ -3,13 +3,13 @@ import { v4 as uuidv4 } from 'uuid'
 import type {
   EntityTypeEnum,
   ReservationStatusEnum,
-  StatusEnum,
+  FriendshipStatusEnum,
   User,
 } from '../../database/types'
 import messages from './notificationMessages'
 
 const formulateFriendshipNotification = (
-  status: StatusEnum,
+  status: FriendshipStatusEnum,
   fromUserFullProfile: User
 ) => {
   let message
@@ -57,7 +57,7 @@ const formulateReservationNotification = (
 
 const getNotificationMessage = (
   entity: EntityTypeEnum,
-  status: StatusEnum | ReservationStatusEnum,
+  status: FriendshipStatusEnum | ReservationStatusEnum,
   fromUserFullProfile: User,
   bookName?: string
 ) => {
@@ -65,7 +65,7 @@ const getNotificationMessage = (
 
   if (entity === 'friendship') {
     notificationMessage = formulateFriendshipNotification(
-      status as StatusEnum,
+      status as FriendshipStatusEnum,
       fromUserFullProfile
     )
   } else if (entity === 'reservation') {
@@ -89,7 +89,7 @@ const getNotificationMessage = (
 const createNotification = async (
   entity: EntityTypeEnum,
   entityId: string,
-  status: StatusEnum | ReservationStatusEnum,
+  status: FriendshipStatusEnum | ReservationStatusEnum,
   toUserId: string,
   fromUserId: string,
   repos: Pick<
