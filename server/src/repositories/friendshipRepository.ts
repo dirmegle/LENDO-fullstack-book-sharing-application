@@ -1,4 +1,4 @@
-import type { Database, Friendship, StatusEnum } from '@server/database'
+import type { Database, Friendship, FriendshipStatusEnum } from '@server/database'
 import type { Selectable } from 'kysely'
 
 export function friendshipRepository(db: Database) {
@@ -13,7 +13,7 @@ export function friendshipRepository(db: Database) {
 
     async updateStatus(
       id: string,
-      newStatus: StatusEnum
+      newStatus: FriendshipStatusEnum
     ): Promise<Friendship | undefined> {
       return db
         .updateTable('friendship')

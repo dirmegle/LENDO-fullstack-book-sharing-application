@@ -40,7 +40,14 @@ export default authenticatedProcedure
 
     const validatedInput = input as BookRequest
 
-    const bookList = await fetchBooks(validatedInput)
-
-    return bookList
+    try {
+      const bookList = await fetchBooks(validatedInput)
+      return bookList
+    } catch {
+      throw new TRPCError({
+        code: 'INTERNAL_SERVER_ERROR',
+        message:
+          'Could not fetch book data',
+      })
+    }
   })

@@ -6,7 +6,7 @@ import type {
   Friendship,
   Notification,
   ReservationStatusEnum,
-  StatusEnum,
+  FriendshipStatusEnum,
   User,
 } from '@server/database/types'
 import type { Insertable } from 'kysely'
@@ -82,7 +82,7 @@ export const fakeFriendshipWithoutId = <
 ) => ({
   fromUserId: random.guid(),
   toUserId: random.guid(),
-  status: 'pending' as StatusEnum,
+  status: 'pending' as FriendshipStatusEnum,
   ...overrides,
 })
 

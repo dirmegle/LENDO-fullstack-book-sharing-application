@@ -26,10 +26,17 @@ export default authenticatedProcedure
         authUser.id
       )
 
+    const existingUser = await repos.userRepository.findByUserId(toUserId)
+
     if (existingFriendship) {
       throw new TRPCError({
         code: 'BAD_REQUEST',
         message: 'Friendship between these two users already exists',
+      })
+    } else if (!existingUser) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'User to sen friendship request to does not exist',
       })
     }
 
