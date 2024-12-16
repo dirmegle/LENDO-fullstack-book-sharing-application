@@ -43,7 +43,7 @@ At the moment, the backend has been set to allow the user to:
 - **Frontend (planned):** React, TypeScript, Tailwind, shadcn/ui
 
 ### Database schema
-![Database_schema](LENDO-fullstack-book-sharing-application/server/src/database/lendoSchema.png "Database schema")
+https://dbdiagram.io/d/Lendo-66e83d9a6dde7f414941cc1f 
 
 ## Application roadmap
 
