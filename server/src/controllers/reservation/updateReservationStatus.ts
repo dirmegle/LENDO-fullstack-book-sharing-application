@@ -52,6 +52,8 @@ export default authenticatedProcedure
         })
       }
 
+      
+
       const updatedReservation =
         await repos.reservationsRepository.updateStatus(id, status)
 

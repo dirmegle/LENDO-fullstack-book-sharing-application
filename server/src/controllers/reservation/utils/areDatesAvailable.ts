@@ -18,14 +18,14 @@ const areDatesAvailable = (
     const existingEndDate = new Date(period.endDate)
 
     if (
-      (newStartDate > existingStartDate && newStartDate < existingEndDate) ||
-      (existingStartDate > newStartDate && existingStartDate < newEndDate)
+      (newStartDate >= existingStartDate && newStartDate <= existingEndDate) ||
+      (existingStartDate >= newStartDate && existingStartDate <= newEndDate)
     ) {
       overlaps.push(period)
     }
   })
 
-  return !(overlaps.length > 0)
+  return !overlaps.length
 }
 
 export default areDatesAvailable
