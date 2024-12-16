@@ -42,6 +42,9 @@ At the moment, the backend has been set to allow the user to:
 - **Backend:** RPC API, TypeScript, Node.js, Kysely, PostgreSQL, Google Books API
 - **Frontend (planned):** React, TypeScript, Tailwind, shadcn/ui
 
+### Database schema
+![Database_schema](LENDO-fullstack-book-sharing-application/server/src/database/lendoSchema.png "Database schema")
+
 ## Application roadmap
 
 | No. | Feature                                                             | Frontend | Backend |
