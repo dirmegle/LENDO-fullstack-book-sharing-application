@@ -60,7 +60,7 @@ describe('updateFriendship', () => {
 
     expect(updatedFriendship.status).toEqual('accepted')
     expect(createdNotification.message).toEqual(
-      messages.friendshipAcceptMessage(
+      messages.friendship.accepted(
         `${fromUser.firstName} ${fromUser.lastName}`
       )
     )
@@ -79,7 +79,7 @@ describe('updateFriendship', () => {
 
     expect(updatedFriendship.status).toEqual('declined')
     expect(createdNotification.message).toEqual(
-      messages.friendshipDeclineMessage(
+      messages.friendship.declined(
         `${fromUser.firstName} ${fromUser.lastName}`
       )
     )
@@ -109,7 +109,7 @@ describe('updateFriendship', () => {
 
     expect(updatedFriendship.status).toEqual('deleted')
     expect(createdNotification.message).toEqual(
-      messages.friendshipDeletionMessage(
+      messages.friendship.deleted(
         `${fromUser.firstName} ${fromUser.lastName}`
       )
     )

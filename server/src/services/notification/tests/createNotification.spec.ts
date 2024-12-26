@@ -48,7 +48,7 @@ describe('createNotification', () => {
       q('notification.triggeredById', '=', fromUser.id)
     )
 
-    const message = messages.friendshipRequestMessage(
+    const message = messages.friendship.pending(
       `${fromUser.firstName} ${fromUser.lastName}`
     )
 
