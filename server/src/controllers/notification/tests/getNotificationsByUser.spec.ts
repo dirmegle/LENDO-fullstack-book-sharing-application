@@ -26,7 +26,7 @@ const notification = fakeNotificationWithId({
   userId: user.id,
   entityType: 'friendship',
   entityId: friendship.id,
-  message: messages.friendshipRequestMessage(
+  message: messages.friendship.pending(
     `${triggeredByUser.firstName} ${triggeredByUser.lastName}`
   ),
 })

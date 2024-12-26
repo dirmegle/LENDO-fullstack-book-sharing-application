@@ -8,84 +8,31 @@ import type {
 } from '../../database/types'
 import messages from './notificationMessages'
 
-const formulateFriendshipNotification = (
-  status: FriendshipStatusEnum,
-  fromUserFullProfile: User
-) => {
-  let message
-  const fromUserFullName = `${fromUserFullProfile.firstName} ${fromUserFullProfile.lastName}`
-
-  if (status === 'accepted') {
-    message = messages.friendshipAcceptMessage(fromUserFullName)
-  } else if (status === 'declined') {
-    message = messages.friendshipDeclineMessage(fromUserFullName)
-  } else if (status === 'pending') {
-    message = messages.friendshipRequestMessage(fromUserFullName)
-  } else if (status === 'deleted') {
-    message = messages.friendshipDeletionMessage(fromUserFullName)
-  } else {
-    throw new Error('could not formulate notification message')
-  }
-
-  return message
-}
-
-const formulateReservationNotification = (
-  status: ReservationStatusEnum,
-  fromUserFullProfile: User,
-  bookName: string
-) => {
-  let message
-  const fromUserFullName = `${fromUserFullProfile.firstName} ${fromUserFullProfile.lastName}`
-
-  if (status === 'pending') {
-    message = messages.reservationPendingMessage(fromUserFullName, bookName)
-  } else if (status === 'cancelled') {
-    message = messages.reservationCancelledMessage(fromUserFullName, bookName)
-  } else if (status === 'completed') {
-    message = messages.reservationCompletedMessage(fromUserFullName, bookName)
-  } else if (status === 'confirmed') {
-    message = messages.reservationConfirmedMessage(fromUserFullName, bookName)
-  } else if (status === 'rejected') {
-    message = messages.reservationRejectedMessage(fromUserFullName, bookName)
-  } else {
-    throw new Error('could not formulate notification message')
-  }
-
-  return message
-}
-
-// TODO: refactor this similar to notificationMessages
-
 const getNotificationMessage = (
   entity: EntityTypeEnum,
   status: FriendshipStatusEnum | ReservationStatusEnum,
   fromUserFullProfile: User,
   bookName?: string
 ) => {
-  let notificationMessage
+  
+  const entityMessages = messages[entity]
+  const authorFullName = `${fromUserFullProfile.firstName} ${fromUserFullProfile.lastName}`
 
-  if (entity === 'friendship') {
-    notificationMessage = formulateFriendshipNotification(
-      status as FriendshipStatusEnum,
-      fromUserFullProfile
-    )
-  } else if (entity === 'reservation') {
+  if (!entityMessages || !(status in entityMessages)) {
+    throw new Error(`Unsupported status '${status}' for entity '${entity}'`);
+  }
+
+ if (entity === 'reservation') {
     if (!bookName) {
       throw new Error(
         'Book name must be provided for reservation notifications'
       )
     }
-    notificationMessage = formulateReservationNotification(
-      status as ReservationStatusEnum,
-      fromUserFullProfile,
-      bookName
-    )
-  } else {
-    throw new Error('Entity must be one of friendship, comment or reservation')
-  }
-
-  return notificationMessage
+    return messages.reservation[status as ReservationStatusEnum](authorFullName, bookName)
+  } if (entity === 'friendship') {
+    return messages.friendship[status as FriendshipStatusEnum](authorFullName)
+  } 
+    throw new Error('Entity must be either friendship or notification')
 }
 
 const createNotification = async (

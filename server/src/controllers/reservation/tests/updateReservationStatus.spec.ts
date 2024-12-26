@@ -73,7 +73,7 @@ describe('updateReservationStatus', () => {
 
     expect(updatedReservation.status).toEqual('confirmed')
     expect(createdNotification.message).toEqual(
-      messages.reservationConfirmedMessage(
+      messages.reservation.confirmed(
         `${ownerUser.firstName} ${ownerUser.lastName}`,
         book.title
       )
@@ -101,7 +101,7 @@ describe('updateReservationStatus', () => {
 
     expect(updatedReservation.status).toEqual('cancelled')
     expect(createdNotification.message).toEqual(
-      messages.reservationCancelledMessage(
+      messages.reservation.cancelled(
         `${reserverUser.firstName} ${reserverUser.lastName}`,
         book.title
       )
