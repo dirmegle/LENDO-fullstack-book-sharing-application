@@ -36,5 +36,9 @@ export function userRepository(db: Database) {
 
       return user
     },
+
+    async updateEmail(newEmail: string, id: string): Promise<User | undefined> {
+      return db.updateTable('user').set({email: newEmail}).where('user.id', '=', id).returningAll().executeTakeFirst()
+    }
   }
 }

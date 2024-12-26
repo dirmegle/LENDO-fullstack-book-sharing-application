@@ -60,6 +60,8 @@ export default authenticatedProcedure
       })
     }
 
+    // TODO: relocate or duplicate this check to updateReservationStatus procedure
+
     const createdReservation = await repos.reservationsRepository.create({
       ...reservation,
       id: uuidv4(),
