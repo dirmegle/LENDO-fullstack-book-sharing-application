@@ -18,6 +18,7 @@ export const userSchema = z.object({
   lastName: z.string().min(1).max(100),
 })
 
+// TODO: review this, bad practice
 export const userKeysAll = Object.keys(userSchema.shape) as (keyof User)[]
 
 export const userKeysPublic = ['id', 'firstName', 'lastName'] as const

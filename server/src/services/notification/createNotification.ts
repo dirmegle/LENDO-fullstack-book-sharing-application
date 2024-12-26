@@ -55,6 +55,8 @@ const formulateReservationNotification = (
   return message
 }
 
+// TODO: refactor this similar to notificationMessages
+
 const getNotificationMessage = (
   entity: EntityTypeEnum,
   status: FriendshipStatusEnum | ReservationStatusEnum,
