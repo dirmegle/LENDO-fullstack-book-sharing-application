@@ -7,6 +7,7 @@ import { prepareTokenPayload } from '@server/trpc/tokenPayload'
 import { TRPCError } from '@trpc/server'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '@server/config'
+import calculateExpirationDate from './utils/calculateExpirationDate'
 
 const { expiresIn, accessTokenKey } = config.auth
 
@@ -47,7 +48,9 @@ export default publicProcedure
       expiresIn,
     })
 
+    const expirationDate = calculateExpirationDate(expiresIn)
+
     return {
-      accessToken,
+      accessToken, expirationDate
     }
   })
