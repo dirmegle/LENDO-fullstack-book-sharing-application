@@ -1,4 +1,4 @@
-export default function booksPage() {
+export default function LibraryPage() {
   return (
     <div>
       <h1>Books</h1>
