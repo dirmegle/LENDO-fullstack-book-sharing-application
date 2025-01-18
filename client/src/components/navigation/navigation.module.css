@@ -1,0 +1,8 @@
+:root {
+    --navigation-height: calc(100vh - 2 * 1rem)
+}
+
+.nav {
+    height: var(--navigation-height);
+    transition: ease 0.5s;
+}

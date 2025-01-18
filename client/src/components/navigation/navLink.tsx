@@ -19,8 +19,8 @@ export default function NavLinkComponent({
       to={link}
       className={({ isActive }) =>
         cn(
-          "flex items-center gap-2 rounded-md mb-3 p-2 text-primary text-md",
-          isActive && "outline outline-accent-pink"
+          "flex items-center gap-2 rounded-md mb-3 p-2 text-primary text-md bg-stoneLight hover:bg-muted-purple transition-all duration-100 ease-in-out",
+          isActive && "outline outline-darkBlue"
         )
       }
     >
