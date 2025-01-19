@@ -19,12 +19,12 @@ export default function NavLinkComponent({
       to={link}
       className={({ isActive }) =>
         cn(
-          "flex items-center gap-2 rounded-md mb-3 p-2 text-primary text-md bg-stoneLight hover:bg-muted-purple transition-all duration-100 ease-in-out",
-          isActive && "outline outline-darkBlue"
+          "flex items-center gap-2 rounded-md mb-3 p-2 text-primary text-md hover:bg-muted-green transition-all duration-100 ease-in-out",
+          isActive && "outline outline-input bg-accent-green"
         )
       }
     >
-        <div className="w-[30px]"><img src={pageIconUrl} alt={pageName} /></div>
+        <div className="w-[25px]"><img src={pageIconUrl} alt={pageName} /></div>
       <span className={cn(!isExpanded && "hidden")}>{pageName}</span>
     </NavLink>
   );
