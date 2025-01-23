@@ -1,27 +1,27 @@
-// import PrivateRoute from "./privateRoute"
 import AuthPageLayout from "@/layouts/authPageLayout"
 import pagesConfig from "./pagesConfig"
-// import LoginSignupPage from "@/pages/loginSignupPage"
+import PrivateRoute from "./privateRoute"
+import LoginSignupPage from "@/pages/loginSignupPage"
 
 const routerConfig = [
     {
     path: '/', 
     element: (
-        // <PrivateRoute>
+        <PrivateRoute>
             <AuthPageLayout />
-        // {/* </PrivateRoute> */}
+        </PrivateRoute>
     ),
     // TODO: create error page
     errorElement: <>404 not found page</>,
     children: pagesConfig.private,
 },
-// {
-//     path: '/', 
-//     element: (
-//         <LoginSignupPage />
-//     ),
-//     children: pagesConfig.public,
-// }
+{
+    path: '/', 
+    element: (
+        <LoginSignupPage />
+    ),
+    children: pagesConfig.public,
+}
 ]
 
 export default routerConfig
