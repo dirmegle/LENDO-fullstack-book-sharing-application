@@ -8,7 +8,7 @@ module.exports = {
         colors: {
           border: 'hsl(var(--border))',
           input: '#ebddd3',
-          ring: 'hsl(var(--ring))',
+          ring: 'var(--ring)',
           background: '#FBF8F6',
           foreground: 'hsl(var(--foreground))',
           stoneDark: '#F3EBE5',
@@ -23,7 +23,7 @@ module.exports = {
             foreground: 'hsl(var(--secondary-foreground))'
           },
           destructive: {
-            DEFAULT: 'hsl(var(--destructive))',
+            DEFAULT: 'var(--destructive)',
             foreground: 'hsl(var(--destructive-foreground))'
           },
           muted: {
