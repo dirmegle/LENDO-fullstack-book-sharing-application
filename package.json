@@ -12,5 +12,8 @@
   "workspaces": [
     "server",
     "client"
-  ]
+  ],
+  "dependencies": {
+    "vite-plugin-svgr": "^4.3.0"
+  }
 }

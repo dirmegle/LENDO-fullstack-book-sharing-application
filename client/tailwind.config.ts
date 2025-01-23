@@ -7,10 +7,13 @@ module.exports = {
       extend: {
         colors: {
           border: 'hsl(var(--border))',
-          input: 'hsl(var(--input))',
+          input: '#ebddd3',
           ring: 'hsl(var(--ring))',
-          background: 'hsl(var(--background))',
+          background: '#FBF8F6',
           foreground: 'hsl(var(--foreground))',
+          stoneDark: '#F3EBE5',
+          stoneLight: '#FBF8F6',
+          darkBlue: '#0f172a',
           primary: {
             DEFAULT: 'hsl(var(--primary))',
             foreground: 'hsl(var(--primary-foreground))'
@@ -25,11 +28,16 @@ module.exports = {
           },
           muted: {
             DEFAULT: 'hsl(var(--muted))',
-            foreground: 'hsl(var(--muted-foreground))'
+            foreground: 'hsl(var(--muted-foreground))',
+            green: '#E1F28D',
+            purple: '#d8d4ff'
           },
           accent: {
             DEFAULT: 'hsl(var(--accent))',
-            foreground: 'hsl(var(--accent-foreground))'
+            foreground: 'hsl(var(--accent-foreground))',
+            green: '#DEF080',
+            peach: '#FFB28C',
+            purple: '#B0A8FE'
           },
           popover: {
             DEFAULT: 'hsl(var(--popover))',

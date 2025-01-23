@@ -1,4 +1,4 @@
-export default function reservations() {
+export default function Reservations() {
     return (
       <div>
         <h1>Reservations</h1>

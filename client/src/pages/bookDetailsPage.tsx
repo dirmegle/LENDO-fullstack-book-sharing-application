@@ -1,4 +1,4 @@
-export default function bookDetailsPage() {
+export default function BookDetailsPage() {
   return (
     <div>
       <h1>Book details page</h1>

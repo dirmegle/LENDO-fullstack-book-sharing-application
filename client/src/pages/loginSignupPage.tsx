@@ -1,7 +1,9 @@
-export default function loginSignupPage() {
+import LoginForm from "@/components/forms/loginForm";
+
+export default function LoginSignupPage() {
   return (
     <div>
-      <h1>Unauthenticated page</h1>
+      <LoginForm></LoginForm>
     </div>
   )
 }
