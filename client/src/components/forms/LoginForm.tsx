@@ -1,32 +1,48 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
-import { Input } from '../input'
-import { Button } from '../button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './Form'
+import { Input } from '../Input'
+import { Button } from '../Button'
 import { loginConfig } from './inputConfig'
+import { trpc } from '@/trpc'
+import { setAccessTokenCookie } from '@/utils/isAuthenticated'
+import { useToast } from '@/hooks/useToast'
+import { useNavigate } from 'react-router-dom'
 
-// See if schemas can be shared
 const formSchema = z.object({
     email: z.string().trim().toLowerCase().email(),
-    password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters long')
-    .max(64, 'Password must be at most 64 characters long')
-    .regex(/[0-9]/, 'Password must contain at least one number')
-    .regex(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      'Password must contain at least one special character'
-    ),
+    password: z.string()
 })
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+    const { toast } = useToast()
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     })
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+
+    const onSubmit = async (userLogin: z.infer<typeof formSchema>) => {
+      try {
+        const {accessToken, expirationDate} = await trpc.user.login.mutate(userLogin)
+        setAccessTokenCookie(accessToken, expirationDate)
+        navigate('/')
+      } catch {
+        const fields = ["email", "password"] as const
+        fields.forEach((field) => {
+          form.setError(field, {
+            type: "manual",
+            message: ""
+          })
+        })
+        toast({
+          title: "Could not log in",
+          description: "Your email or password are incorrect",
+          variant: "destructive"
+        })
+      }
     }
 
   return (

@@ -1,5 +1,6 @@
 import DesktopNavigation from "@/components/navigation/desktopNavigation";
 import MobileNavigation from "@/components/navigation/mobileNavigation";
+import { Toaster } from "@/components/toast/Toaster";
 import { Outlet } from "react-router-dom";
 
 export default function authPageLayout() {
@@ -19,6 +20,7 @@ export default function authPageLayout() {
         </main>
         <footer>
           Footer
+          <Toaster />
         </footer>
         </div>
       </div>

@@ -1,12 +1,14 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from 'zod'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './form'
-import { Input } from '../input'
-import { Button } from '../button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './Form'
+import { Input } from '../Input'
+import { Button } from '../Button'
 import { signupConfig } from './inputConfig'
+import { useNavigate } from 'react-router-dom'
+import { useToast } from '@/hooks/useToast'
+import { trpc } from '@/trpc'
 
-// See if schemas can be shared
 const formSchema = z.object({
     firstName: z.string().min(1).max(100),
   lastName: z.string().min(1).max(100),
@@ -29,15 +31,42 @@ const formSchema = z.object({
       /[!@#$%^&*(),.?":{}|<>]/,
       'Password must contain at least one special character'
     ),
-})
+}).refine(
+  (data) => data.password === data.repeatPassword, 
+  {
+    message: "Passwords do not match",
+    path: ["repeatPassword"], // error will appear under "repeatPassword" field
+  }
+)
 
 export default function SignupForm() {
+  const navigate = useNavigate();
+    const { toast } = useToast()
+    
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
     })
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
-        console.log(values)
+    const onSubmit = async ({firstName, lastName, email, password}: z.infer<typeof formSchema>) => {
+        try {
+          await trpc.user.signup.mutate({email, password, firstName, lastName})
+          toast({
+            title: "Account created successfully",
+            description: "You can now log in."
+          })
+          form.reset()
+          navigate('/login?activeTab=login')
+        } catch {
+          form.setError('email', {
+            type: "manual",
+            message: ""
+          })
+          toast({
+            title: "Cannot use this email",
+            description: "A user with email address might already exist. Try logging in.",
+            variant: "destructive"
+          })
+        }
     }
 
   return (

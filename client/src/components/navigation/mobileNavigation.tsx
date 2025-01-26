@@ -1,6 +1,6 @@
 import { getNavLinks } from "@/router/pagesConfig";
 import NavLink from './navLink';
-import { Button } from "../button";
+import { Button } from "../Button";
 import BurgerMenu from "@/assets/icons/burger.svg?react";
 import { useState } from "react";
 import classNames from "classnames";
