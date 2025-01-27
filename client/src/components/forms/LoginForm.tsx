@@ -9,6 +9,7 @@ import { trpc } from '@/trpc'
 import { setAccessTokenCookie } from '@/utils/isAuthenticated'
 import { useToast } from '@/hooks/useToast'
 import { useNavigate } from 'react-router-dom'
+import useUserContext from '@/context/UserContext'
 
 const formSchema = z.object({
     email: z.string().trim().toLowerCase().email(),
@@ -16,6 +17,8 @@ const formSchema = z.object({
 })
 
 export default function LoginForm() {
+
+  const { fetchUserData } = useUserContext()
   const navigate = useNavigate();
     const { toast } = useToast()
     
@@ -27,6 +30,7 @@ export default function LoginForm() {
     const onSubmit = async (userLogin: z.infer<typeof formSchema>) => {
       try {
         const {accessToken, expirationDate} = await trpc.user.login.mutate(userLogin)
+        fetchUserData()
         setAccessTokenCookie(accessToken, expirationDate)
         navigate('/')
       } catch {

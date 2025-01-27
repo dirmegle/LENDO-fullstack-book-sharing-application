@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt'
-import { userSchema } from '@server/entities/user'
 import { userRepository } from '@server/repositories/userRepository'
 import { publicProcedure } from '@server/trpc'
 import provideRepos from '@server/trpc/provideRepos'
@@ -7,6 +6,7 @@ import { prepareTokenPayload } from '@server/trpc/tokenPayload'
 import { TRPCError } from '@trpc/server'
 import jsonwebtoken from 'jsonwebtoken'
 import config from '@server/config'
+import { z } from 'zod'
 import calculateExpirationDate from './utils/calculateExpirationDate'
 
 const { expiresIn, accessTokenKey } = config.auth
@@ -17,12 +17,10 @@ export default publicProcedure
       userRepository,
     })
   )
-  .input(
-    userSchema.pick({
-      email: true,
-      password: true,
-    })
-  )
+  .input( z.object({
+    email: z.string().email(),
+    password: z.string(),
+  }))
   .mutation(async ({ input: { email, password }, ctx: { repos } }) => {
     const user = await repos.userRepository.findByEmail(email)
 
@@ -51,6 +49,6 @@ export default publicProcedure
     const expirationDate = calculateExpirationDate(expiresIn)
 
     return {
-      accessToken, expirationDate
+      accessToken, expirationDate, user
     }
   })
