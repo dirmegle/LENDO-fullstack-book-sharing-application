@@ -1,10 +1,10 @@
 
-import BookDetailsPage from "@/pages/bookDetailsPage";
-import LibraryPage from "@/pages/libraryPage";
-import HomePage from "@/pages/homePage";
-import FriendsPage from "@/pages/friendsPage";
-import LoginSignupPage from "@/pages/loginSignupPage";
-import ReservationsPage from "@/pages/reservationsPage";
+import BookDetailsPage from "@/pages/BookDetailsPage";
+import LibraryPage from "@/pages/LibraryPage";
+import HomePage from "@/pages/HomePage";
+import FriendsPage from "@/pages/FriendsPage";
+import LoginSignupPage from "@/pages/LoginSignupPage";
+import ReservationsPage from "@/pages/ReservationsPage";
 import { Navigate } from "react-router-dom";
 
 const pagesConfig = {

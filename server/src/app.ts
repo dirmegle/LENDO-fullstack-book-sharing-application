@@ -10,6 +10,7 @@ import { appRouter } from './controllers'
 import type { Context } from './trpc'
 import config from './config'
 
+
 export default function createApp(db: Database) {
   const app = express()
 
