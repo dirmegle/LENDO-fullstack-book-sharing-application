@@ -1,0 +1,42 @@
+.abstractOne {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    animation: bounce 20s linear infinite;
+    z-index: 0; /* Ensure it stays behind the tabs */
+  }
+  
+  @keyframes bounce {
+    0% {
+      top: 0%;
+      left: 20%;
+    }
+    15% {
+      top: 90%;
+      left: 60%;
+    }
+    30% {
+      top: 40%;
+      left: 80%;
+    }
+    45% {
+      top: 80%;
+      left: 30%;
+    }
+    60% {
+      top: 30%;
+      left: 70%;
+    }
+    75% {
+      top: 70%;
+      left: 10%;
+    }
+    90% {
+      top: 20%;
+      left: 50%;
+    }
+    100% {
+      top: 10%;
+      left: 20%;
+    }
+  }
