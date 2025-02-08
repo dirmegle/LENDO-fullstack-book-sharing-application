@@ -1,0 +1,121 @@
+:root {
+  --sizeOne: 200px;
+  --sizeTwo: 250px
+}
+
+.abstractOne {
+    position: absolute;
+    width: var(--sizeOne);
+    height: var(--sizeOne);
+    animation: bounce1 20s linear infinite;
+    z-index: 0;
+  }
+
+.abstractTwo {
+    position: absolute;
+    width: var(--sizeTwo);
+    height: var(--sizeTwo);
+    animation: bounce2 20s linear infinite;
+    z-index: 0;
+  }
+
+.formBackground {
+  background-image: url('../assets/images/booksCollage.png');
+  background-size: cover;
+  background-repeat: repeat-y;
+  animation: scrollBackground 100s linear infinite;
+}
+  
+  @keyframes bounce1 {
+    0% {
+      top: 0%;
+      left: calc(100% - var(--sizeOne));
+    }
+    15% {
+      top: calc(100% - var(--sizeOne));
+      left: 60%;
+    }
+    30% {
+      top: 40%;
+      left: calc(100% - var(--sizeOne));
+    }
+    45% {
+      top: calc(100% - var(--sizeOne));
+      left: 0%;
+    }
+    60% {
+      top: 30%;
+      left: calc(100% - var(--sizeOne));
+    }
+    75% {
+      top: 0%;
+      left: 0%;
+    }
+    90% {
+      top: calc(100% - var(--sizeOne));
+      left: 50%;
+    }
+    100% {
+      top: 0%;
+      left: calc(100% - var(--sizeOne));
+    }
+  }
+
+  @keyframes bounce2 {
+    0% {
+      top: calc(100% - var(--sizeTwo));
+      left: calc(100% - var(--sizeTwo));
+    }
+    14% {
+      top: 0;
+      left: 0;
+    }
+    28% {
+      top: calc(100% - var(--sizeTwo));
+      left: 50%;
+    }
+    42% {
+      top: 50%;
+      left: calc(100% - var(--sizeTwo));
+    }
+    56% {
+      top: 0;
+      left: 40%;
+    }
+    70% {
+      top: 20%;
+      left: calc(100% - var(--sizeTwo));
+    }
+    84% {
+      top: 50%;
+      left: 0;
+    }
+    100% {
+      top: calc(100% - var(--sizeTwo));
+      left: calc(100% - var(--sizeTwo));
+    }
+  }
+
+  @keyframes scrollBackground {
+    0% {
+      background-position: center top;
+    }
+    50% {
+      background-position: center bottom;
+    }
+    100%{
+      background-position: center top;
+    }
+  }
+
+@media only screen and (max-width: 768px) {
+  .abstractOne {
+    width: calc(var(--sizeOne) * 0.6);
+    height: calc(var(--sizeOne) * 0.6);
+  }
+
+  .abstractTwo {
+    width: calc(var(--sizeTwo) * 0.6);
+    height: calc(var(--sizeTwo) * 0.6);
+  }
+}

@@ -7,12 +7,12 @@ module.exports = {
       extend: {
         colors: {
           border: 'hsl(var(--border))',
+          
           input: '#ebddd3',
           ring: 'var(--ring)',
-          background: '#FBF8F6',
+          background: '#F8FAFC',
           foreground: 'hsl(var(--foreground))',
           stoneDark: '#F3EBE5',
-          stoneLight: '#FBF8F6',
           darkBlue: '#0f172a',
           primary: {
             DEFAULT: 'hsl(var(--primary))',
