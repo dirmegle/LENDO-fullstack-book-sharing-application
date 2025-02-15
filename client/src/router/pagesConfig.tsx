@@ -6,6 +6,10 @@ import FriendsPage from "@/pages/FriendsPage";
 import LoginSignupPage from "@/pages/LoginSignupPage";
 import ReservationsPage from "@/pages/ReservationsPage";
 import { Navigate } from "react-router-dom";
+import HomeIcon from '@/assets/icons/home.svg';
+import LibraryIcon from '@/assets/icons/library.svg';
+import ReservationsIcon from '@/assets/icons/reservations.svg';
+import FriendsIcon from '@/assets/icons/friends.svg';
 
 const pagesConfig = {
     private: [
@@ -13,7 +17,7 @@ const pagesConfig = {
       {
         path: '/home',
         navLinkInfo: {
-          pageIconUrl: './src/assets/icons/home.svg',
+          pageIconUrl: HomeIcon,
           linkText: 'Home'
         },
         element: <HomePage />,
@@ -21,7 +25,7 @@ const pagesConfig = {
       {
         path: '/library',
         navLinkInfo: {
-          pageIconUrl: './src/assets/icons/library.svg',
+          pageIconUrl: LibraryIcon,
           linkText: 'Library'
         },
         element: <LibraryPage />,
@@ -33,7 +37,7 @@ const pagesConfig = {
       {
         path: '/reservations',
         navLinkInfo: {
-          pageIconUrl: './src/assets/icons/reservations.svg',
+          pageIconUrl: ReservationsIcon,
           linkText: 'Reservations'
         },
         element: <ReservationsPage />,
@@ -41,7 +45,7 @@ const pagesConfig = {
       {
         path: '/friends',
         navLinkInfo: {
-          pageIconUrl: './src/assets/icons/friends.svg',
+          pageIconUrl: FriendsIcon,
           linkText: 'Friends'
         },
         element: <FriendsPage />,
