@@ -26,7 +26,7 @@ export default function MobileNavigation() {
 
   // Define the classes for the nav menu with Tailwind
   const navMenuClasses = classNames(
-    "p-4 bg-background flex flex-col transition-all duration-300 ease-in-out z-10 border-b border-border",
+    "p-4 bg-background flex flex-col transition-all duration-300 ease-in-out border-b border-border",
     {
       "max-h-screen opacity-100 translate-y-0": isNavOpen,
       "max-h-0 opacity-0 -translate-y-5 overflow-hidden": !isNavOpen,
@@ -34,8 +34,8 @@ export default function MobileNavigation() {
   );
 
   return (
-    <div className="md:hidden fixed top-0 w-full">
-      <div className="p-4 bg-background drop-shadow-md flex justify-between items-center z-20 border-b border-border">
+    <div className="md:hidden fixed top-0 w-full z-50">
+      <div className="p-4 bg-background drop-shadow-md flex justify-between items-center border-b border-border">
         <Button variant="outline" size="icon" onClick={handleClick}>
           <BurgerMenu />
         </Button>

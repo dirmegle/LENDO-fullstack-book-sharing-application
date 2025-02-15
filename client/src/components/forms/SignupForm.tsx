@@ -11,7 +11,7 @@ import { trpc } from '@/trpc'
 
 const formSchema = z.object({
     firstName: z.string().min(1).max(100),
-  lastName: z.string().min(1).max(100),
+    lastName: z.string().min(1).max(100),
     email: z.string().trim().toLowerCase().email(),
     password: z
     .string()
