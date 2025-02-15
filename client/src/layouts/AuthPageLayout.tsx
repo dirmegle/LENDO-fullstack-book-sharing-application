@@ -11,7 +11,7 @@ export default function AuthPageLayout() {
         <MobileNavigation />
         <DesktopNavigation />
       </div>
-      <div className="flex flex-col h-full w-full p-4">
+      <div className="flex flex-col h-full w-full p-4 gap-7">
         <header>
           <Header />
         </header>
