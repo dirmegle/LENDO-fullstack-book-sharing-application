@@ -1,3 +1,4 @@
+import Header from "@/components/Header";
 import DesktopNavigation from "@/components/navigation/desktopNavigation";
 import MobileNavigation from "@/components/navigation/mobileNavigation";
 import { Toaster } from "@/components/toast/Toaster";
@@ -12,7 +13,7 @@ export default function authPageLayout() {
       </div>
       <div className="h-full  w-full p-4">
         <header>
-          Header W
+          <Header />
         </header>
         <div className="h-full">
         <main>

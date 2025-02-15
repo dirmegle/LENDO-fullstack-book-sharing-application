@@ -26,10 +26,10 @@ export default function Navigation() {
         )
     )
 
-    const navClasses = classNames(styles.nav, 'hidden border border-border w-max-content p-4 bg-background 2xl:rounded-md rounded-r-md  md:flex flex-col items-center justify-center sticky top-4', isExpanded ? 'w-44' : 'w-20')
+    const navClasses = classNames(styles.nav, 'hidden border border-border w-max-content p-4 bg-background 2xl:rounded-md rounded-r-md  md:flex flex-col items-center justify-center sticky top-4', isExpanded ? 'w-44' : 'w-16')
   return (
     <aside className={navClasses}>
-      <button onClick={handleClick} className='absolute top-0 bg-accent-green w-full rounded-t-md flex justify-center hover:bg-muted-green transition-all duration-300 ease-in-out border-b border-border'>{isExpanded ? <ArrowLeft /> : <ArrowRight />}</button>
+      <button onClick={handleClick} className='h-10 absolute top-0 bg-accent-green w-full rounded-t-md flex justify-center items-center hover:bg-muted-green transition-all duration-300 ease-in-out border-b border-border'>{isExpanded ? <ArrowLeft /> : <ArrowRight />}</button>
       <nav>{navLinks}</nav>
     </aside>
   )

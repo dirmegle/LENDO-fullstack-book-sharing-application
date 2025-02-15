@@ -30,7 +30,7 @@ module.exports = {
             DEFAULT: 'hsl(var(--muted))',
             foreground: 'hsl(var(--muted-foreground))',
             green: '#E1F28D',
-            purple: '#d8d4ff'
+            purple: 'var(--muted-purple)'
           },
           accent: {
             DEFAULT: 'hsl(var(--accent))',

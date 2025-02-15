@@ -26,6 +26,7 @@
     --destructive-foreground: 210 40% 98%;
     --ring: #B0A8FE;
     --radius: 0.1rem;
+    --muted-purple: #e7e5ff;
   }
  
   .dark {
