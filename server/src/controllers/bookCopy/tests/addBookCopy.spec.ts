@@ -43,17 +43,18 @@ describe('addBookCopy', () => {
       fakeBookCopyWithId({ ...bookCopy, id: response.id })
     )
   })
-  it('throws an error if the book copy already exists based on ISBN', async () => {
+  it('throws an error if the book copy already exists based on ISBN and available is set to true', async () => {
     const { addBookCopy } = createCaller(authContext({ db }, user))
 
     const [existingBookCopy] = await insertAll(db, 'bookCopy', [
       fakeBookCopyWithId({
         isbn: book.isbn,
         ownerId: user.id,
+        isAvailable: true
       }),
     ])
 
-    const newBookCopy = fakeBookCopyWithoutId({ isbn: existingBookCopy.isbn })
+    const newBookCopy = fakeBookCopyWithoutId({ isbn: existingBookCopy.isbn, isAvailable: true })
 
     await expect(addBookCopy(newBookCopy)).rejects.toThrow(/ISBN/i)
   })

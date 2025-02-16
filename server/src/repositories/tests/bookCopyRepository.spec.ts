@@ -38,7 +38,7 @@ describe('create', () => {
   })
 })
 
-describe('getByUserId', () => {
+describe('getByOwnerId', () => {
   it('returns a book copy by user id if it exists', async () => {
     const [existingBookCopy] = await insertAll(
       db,
@@ -49,12 +49,12 @@ describe('getByUserId', () => {
       })
     )
 
-    const response = await repository.getByOwnerId(existingBookCopy.ownerId)
+    const [ response ] = await repository.getByOwnerId(existingBookCopy.ownerId)
     expect(response).toEqual(existingBookCopy)
   })
   it('returns undefined if there are no copies with the user id', async () => {
     const response = await repository.getByOwnerId(random.guid())
-    expect(response).toBeUndefined()
+    expect(response).toEqual([])
   })
 })
 

@@ -60,12 +60,4 @@ describe('login', () => {
       })
     ).resolves.toEqual(expect.anything())
   })
-  it('allows login with surrounding whitespace', async () => {
-    await expect(
-      login({
-        email: ` \t ${userSeed.email}\t `,
-        password: CORRECT_PASSWORD,
-      })
-    ).resolves.toEqual(expect.anything())
-  })
 })

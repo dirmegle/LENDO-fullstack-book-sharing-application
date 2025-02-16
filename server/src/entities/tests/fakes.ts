@@ -60,9 +60,9 @@ export const fakeBook = <T extends Partial<Book>>(
 export const fakeBookCopyWithoutId = <T extends Partial<Insertable<BookCopy>>>(
   overrides: T = {} as T
 ) => ({
-  isAvailable: random.bool(),
+  isAvailable: true,
   isbn: String(random.integer({ min: 1000000000, max: 9999999999 })),
-  isLendable: random.bool(),
+  isLendable: true,
   ownerId: random.guid(),
   ...overrides,
 })

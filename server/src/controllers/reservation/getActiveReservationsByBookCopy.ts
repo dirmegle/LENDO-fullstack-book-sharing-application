@@ -12,7 +12,7 @@ export default authenticatedProcedure
   .input(reservationSchema.pick({ bookCopyId: true }))
   .query(async ({ input: { bookCopyId }, ctx: { repos } }) => {
     const reservations =
-      await repos.reservationsRepository.getReservationsByBookCopyId(bookCopyId)
+      await repos.reservationsRepository.getActiveReservationsByBookCopyId(bookCopyId)
 
     return reservations
   })
