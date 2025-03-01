@@ -1,8 +1,12 @@
 {
   "cSpell.words": [
     "inauthor",
+    "Insertable",
     "intitle",
     "is_lendable",
+    "kysely",
+    "Lendability",
+    "Lendable",
     "lendees",
     "lendo",
     "Postgre",
@@ -10,6 +14,7 @@
     "superjson",
     "supersecretkey",
     "typecheck",
+    "Updateable",
     "uuidv",
     "WXDAPKU"
   ]

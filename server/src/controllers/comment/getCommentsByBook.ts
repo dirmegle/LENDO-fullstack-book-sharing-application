@@ -7,7 +7,6 @@ export default authenticatedProcedure
   .use(provideRepos({ commentRepository }))
   .input(commentSchema.pick({ isbn: true }))
   .query(async ({ input: { isbn }, ctx: { authUser, repos } }) => {
-    const comments = repos.commentRepository.getByBook(isbn, authUser.id)
-
+    const comments = await repos.commentRepository.getByBook(isbn, authUser.id)
     return comments
   })

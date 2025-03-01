@@ -86,6 +86,7 @@ export function commentRepository(db: Database) {
         .where((eb) => {
           const conditions: Expression<SqlBool>[] = [
             eb('comment.public', '=', true),
+            eb('comment.userId', '=', userId),
           ]
 
           if (uniqueFriendsArray.length > 0) {
