@@ -18,11 +18,13 @@ export default publicProcedure
     })
   )
   .input( z.object({
-    email: z.string().email(),
+    email: z.string().email().trim(),
     password: z.string(),
   }))
   .mutation(async ({ input: { email, password }, ctx: { repos } }) => {
-    const user = await repos.userRepository.findByEmail(email)
+    const normalizedEmail = email.trim().toLowerCase()
+
+    const user = await repos.userRepository.findByEmail(normalizedEmail)
 
     if (!user) {
       throw new TRPCError({

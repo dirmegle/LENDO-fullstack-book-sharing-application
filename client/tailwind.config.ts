@@ -6,16 +6,15 @@ module.exports = {
     theme: {
       extend: {
         colors: {
-          border: 'hsl(var(--border))',
-          
+          border: 'var(--border)',
           input: '#ebddd3',
           ring: 'var(--ring)',
           background: '#F8FAFC',
-          foreground: 'hsl(var(--foreground))',
+          foreground: 'var(--foreground)',
           stoneDark: '#F3EBE5',
           darkBlue: '#0f172a',
           primary: {
-            DEFAULT: 'hsl(var(--primary))',
+            DEFAULT: 'var(--primary)',
             foreground: 'hsl(var(--primary-foreground))'
           },
           secondary: {

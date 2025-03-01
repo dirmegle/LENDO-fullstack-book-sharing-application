@@ -11,15 +11,18 @@ export function bookCopyRepository(db: Database) {
         .returning(bookCopyKeys)
         .executeTakeFirstOrThrow()
     },
+
     async getByOwnerId(
       ownerId: string
-    ): Promise<Selectable<BookCopy> | undefined> {
+    ): Promise<BookCopy[]> {
       return db
         .selectFrom('bookCopy')
         .select(bookCopyKeys)
         .where('ownerId', '=', ownerId)
-        .executeTakeFirst()
+        .where('isAvailable', '=', true)
+        .execute()
     },
+
     async getById(id: string): Promise<Selectable<BookCopy> | undefined> {
       return db
         .selectFrom('bookCopy')
@@ -27,6 +30,7 @@ export function bookCopyRepository(db: Database) {
         .where('bookCopy.id', '=', id)
         .executeTakeFirst()
     },
+
     async getByISBNAndOwnerId(
       isbn: string,
       ownerId: string
@@ -38,6 +42,7 @@ export function bookCopyRepository(db: Database) {
         .where('isbn', 'like', `%${isbn}%`)
         .executeTakeFirst()
     },
+
     async updateLendability(id: string): Promise<Updateable<BookCopy>> {
       return db
         .updateTable('bookCopy')
@@ -46,7 +51,19 @@ export function bookCopyRepository(db: Database) {
         .returningAll()
         .executeTakeFirstOrThrow()
     },
+
     async updateAvailability(id: string): Promise<Updateable<BookCopy>> {
+      return db
+        .updateTable('bookCopy')
+        .set({
+          isAvailable: sql`CASE WHEN "is_available" THEN FALSE ELSE TRUE END`,
+        })
+        .where('id', '=', id)
+        .returningAll()
+        .executeTakeFirstOrThrow();
+    },
+
+    async removeBookCopy(id: string): Promise<Updateable<BookCopy>> {
       return db
         .updateTable('bookCopy')
         .set({ isAvailable: sql`NOT "is_available"` })

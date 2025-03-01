@@ -54,6 +54,22 @@ export function reservationsRepository(db: Database) {
       ) as ReservationWithISOString[]
     },
 
+    async getActiveReservationsByBookCopyId(
+      bookCopyId: string
+    ): Promise<Selectable<ReservationWithISOString>[]> {
+      const reservations = await db
+        .selectFrom('reservation')
+        .selectAll()
+        .where('bookCopyId', '=', bookCopyId)
+        .where('reservation.status', 'in', ['confirmed', 'pending'])
+        .execute()
+
+      return mapISOStringObjectArray(
+        reservations,
+        dateProperties
+      ) as ReservationWithISOString[]
+    },
+
     async getDatesByBookCopyId(
       bookCopyId: string
     ): Promise<

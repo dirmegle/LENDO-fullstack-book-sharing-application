@@ -33,24 +33,24 @@ beforeAll(async () => {
   await insertAll(db, 'bookCopy', [bookCopy])
 })
 
-describe('getReservationsByBookCopy', () => {
+describe('getActiveReservationsByBookCopy', () => {
   it('throws an error if user is unauthenticated', async () => {
     await insertAll(db, 'reservation', [existingReservation])
-    const { getReservationsByBookCopy } = createCaller(requestContext({ db }))
+    const { getActiveReservationsByBookCopy } = createCaller(requestContext({ db }))
 
     await expect(
-      getReservationsByBookCopy({ bookCopyId: bookCopy.id })
+      getActiveReservationsByBookCopy({ bookCopyId: bookCopy.id })
     ).rejects.toThrow(/unauthenticated/i)
   })
 
   it('gets an array of reservations if they exist', async () => {
     await insertAll(db, 'reservation', [existingReservation])
 
-    const { getReservationsByBookCopy } = createCaller(
+    const { getActiveReservationsByBookCopy } = createCaller(
       authContext({ db }, ownerUser)
     )
 
-    const [result] = await getReservationsByBookCopy({
+    const [result] = await getActiveReservationsByBookCopy({
       bookCopyId: bookCopy.id,
     })
 
@@ -58,11 +58,11 @@ describe('getReservationsByBookCopy', () => {
   })
 
   it('returns an empty array if there are no reservations for book copy', async () => {
-    const { getReservationsByBookCopy } = createCaller(
+    const { getActiveReservationsByBookCopy } = createCaller(
       authContext({ db }, ownerUser)
     )
 
-    const result = await getReservationsByBookCopy({
+    const result = await getActiveReservationsByBookCopy({
       bookCopyId: bookCopy.id,
     })
 
