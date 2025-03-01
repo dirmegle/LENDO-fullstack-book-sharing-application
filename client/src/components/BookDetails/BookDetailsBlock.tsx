@@ -1,15 +1,17 @@
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '../Dialog'
 import noCover from '@/assets/images/noCover.png'
-import type { Book } from '@server/shared/types';
-import { Badge } from '@/components/Badge';
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/Button';
+import type { Book } from '@server/shared/types'
+import { Badge } from '@/components/Badge'
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/Button'
 import Add from '@/assets/icons/add.svg?react'
 import CheckMark from '@/assets/icons/checkMark.svg?react'
-import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip';
-import { Tooltip } from '@radix-ui/react-tooltip';
+import { TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/Tooltip'
+import { Tooltip } from '@radix-ui/react-tooltip'
 import { trpc } from '@/trpc';
-import { useToast } from '@/hooks/useToast';
-import { Separator } from './Separator';
+import { useToast } from '@/hooks/useToast'
+import { Separator } from '../Separator'
+import addBook from '@/utils/addBook'
 
 interface BookDetailsBlockProps {
     book: Book
@@ -18,6 +20,8 @@ interface BookDetailsBlockProps {
 export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBookInUserList, setIsBookInUserList] = useState<boolean | null>(null)
+  const [isBookAdditionDialogVisibile, setBookAdditionDialogVisibility] = useState(false)
+  const [isBookRemovalDialogVisibile, setBookRemovalDialogVisibility] = useState(false)
   const { toast } = useToast()
 
   const categories = book.categories.split(',')
@@ -35,12 +39,10 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
   const addBookCopy = async () => {
     if (!isBookInUserList) {
       try {
-        const existingBook = await trpc.book.getBookByISBN.query({isbn: book.isbn})
-        if (!existingBook) {
-          trpc.book.addBook.mutate(book)
-        }
+        await addBook(book)
         trpc.bookCopy.addBookCopy.mutate({isbn: book.isbn, isAvailable: true, isLendable: true})
         setIsBookInUserList(true)
+        setBookAdditionDialogVisibility(false)
         toast({
           title: `${book.title} has been added to your personal library`,
           description: 'Make sure to visit your library page to disable or enable book sharing'
@@ -64,6 +66,7 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
         const removedBookCopy = await trpc.bookCopy.removeBookCopy.mutate({id: bookCopyId})
         if (removedBookCopy) {
           setIsBookInUserList(false)
+          setBookRemovalDialogVisibility(false)
           toast({
             title: `${book.title} has been removed from your personal library`,
             description: 'You can add the book any time you want.'
@@ -90,11 +93,12 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
   }
 
   return (
-    <div className='flex flex-col items-center'>
-      <div className='md:h-72 h-36 w-full border border-border bg-accent-peach'></div>
+    <Dialog>
+    <div className='flex flex-col items-center w-full'>
+      <div className='md:h-72 h-36 w-full border border-border bg-accent-green overflow-hidden'></div>
       <div className='sm:max-w-[80%] flex flex-col'>
         <div className='flex md:flex-row flex-col gap-4 justify-center sm:max-w-[80%] sm:items-start items-center'>
-        <div className='md:min-h-[360px] md:min-w-[240px] h-[270px] w-[180px] -mt-12'>
+        <div className='md:min-h-[360px] md:min-w-[240px] h-[270px] w-[180px] -mt-12 border'>
           <img
             src={book.coverImage ? book.coverImage : noCover}
             alt={`Cover image for ${book.title} by ${book.author}`}
@@ -106,7 +110,10 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <Button onClick={isBookInUserList ? removeBookCopy : addBookCopy} size="icon" variant={ isBookInUserList ? 'accentGreen' : 'accentPurple'}>{isBookInUserList ? <CheckMark /> : <Add />}</Button>
+                  <DialogTrigger>
+                    <Button onClick={isBookInUserList ? (() => setBookRemovalDialogVisibility(true)) : (() => setBookAdditionDialogVisibility(true))} size="icon" variant={ isBookInUserList ? 'accentGreen' : 'accentPurple'}>{isBookInUserList ? <CheckMark /> : <Add />}</Button>
+                  </DialogTrigger>
+                  
                 </TooltipTrigger>
                 <TooltipContent>
                   {isBookInUserList ? <p>Remove from personal library</p> : <p>Add to personal library</p>}
@@ -132,7 +139,29 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
       </div>
       <Separator className='mt-16'/>
       </div>
-
     </div>
+
+    {isBookAdditionDialogVisibile && (
+        <DialogContent>
+        <DialogTitle>Are you sure?</DialogTitle>
+        <DialogDescription>The book copy will be added to your personal library</DialogDescription>
+        <DialogFooter>
+        <Button variant="outline" onClick={addBookCopy}>Add</Button>
+        <Button onClick={() => setBookAdditionDialogVisibility(false)}>Cancel</Button>
+      </DialogFooter>
+      </DialogContent>
+    )}
+
+    {isBookRemovalDialogVisibile && (
+            <DialogContent>
+            <DialogTitle>Are you sure?</DialogTitle>
+            <DialogDescription>The book copy will be removed from your personal library. This action is only available if there are no active reservations for this book.</DialogDescription>
+            <DialogFooter>
+            <Button variant="outline" onClick={removeBookCopy}>Remove</Button>
+            <Button onClick={() => setBookRemovalDialogVisibility(false)}>Cancel</Button>
+          </DialogFooter>
+          </DialogContent>
+        )}
+    </Dialog>
   );
 }

@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router-dom';
 import type { Book } from '@server/shared/types';
-import BookDetailsBlock from '@/components/BookDetailsBlock';
+import BookDetailsBlock from '@/components/BookDetails/BookDetailsBlock';
 import CommentSection from '@/components/CommentSection/CommentSection';
 
 export default function BookDetailsPage() {
@@ -10,7 +10,7 @@ export default function BookDetailsPage() {
   return (
     <div className='flex flex-col items-center'>
       <BookDetailsBlock book={book}/>
-      <CommentSection />
+      <CommentSection  book={book}/>
     </div>
   );
 }

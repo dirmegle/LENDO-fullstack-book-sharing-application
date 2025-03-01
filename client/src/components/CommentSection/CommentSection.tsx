@@ -4,9 +4,12 @@ import { Checkbox } from '../Checkbox'
 import { Label } from '../Label'
 import { Textarea } from '../Textarea'
 import { trpc } from '@/trpc'
-import { Book } from '@server/shared/types'
-import { useRef, useState } from 'react'
+import { Book, CommentWithISOCreatedAt } from '@server/shared/types'
+import { useEffect, useRef, useState } from 'react'
 import { useToast } from '@/hooks/useToast'
+import addBook from '@/utils/addBook'
+import { mapISOStringSingleObject } from '@/utils/mapISOString'
+import Comment from './Comment'
 
 interface CommentSectionProps {
   book: Book
@@ -15,7 +18,25 @@ interface CommentSectionProps {
 export default function CommentSection({ book }: CommentSectionProps) {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const [isPublic, setIsPublic] = useState(false)
+  const [comments, setComments] = useState<CommentWithISOCreatedAt[]>([])
   const { toast } = useToast()
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const fetchedComments = await trpc.comment.getCommentsByBook.query({ isbn: book.isbn })
+        setComments(fetchedComments)
+      } catch {
+        toast({
+          title: 'Could not fetch comments for the book',
+          description: 'If the issue persists, please contact support',
+          variant: 'destructive',
+        })
+      }
+    }
+
+    fetchComments()
+  }, [book.isbn, toast])
 
   const handleCommentPosting = async () => {
     if (!textAreaRef.current) {
@@ -29,13 +50,20 @@ export default function CommentSection({ book }: CommentSectionProps) {
     }
 
     try {
+      await addBook(book)
+
       const createdComment = await trpc.comment.createComment.mutate({
         isbn: book.isbn,
         content: commentText,
         public: isPublic,
       })
 
-      return createdComment
+      textAreaRef.current.value = ""
+
+      const createdCommentWithISOS = mapISOStringSingleObject(createdComment, ["createdAt"])
+
+      setComments((prevComments) => [...prevComments, createdCommentWithISOS as CommentWithISOCreatedAt])
+
     } catch {
       toast({
         title: 'Could not post your comment',
@@ -45,6 +73,12 @@ export default function CommentSection({ book }: CommentSectionProps) {
     }
   }
 
+  const handleCommentDeletion = (deletedCommentId: string) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== deletedCommentId)
+    );
+  }
+
   return (
     <div className="sm:w-[80%] w-[100%] mt-4">
       <h3 className="text-2xl text-center md:text-left">Comments</h3>
@@ -52,7 +86,7 @@ export default function CommentSection({ book }: CommentSectionProps) {
         <Label htmlFor="comment">Leave your comment</Label>
         <Textarea placeholder="Type your comment here." id="comment" ref={textAreaRef} />
 
-        <div className="flex items-center justify-end space-x-4 mt-2">
+        <div className="flex items-center justify-end space-x-4 mt-2 mb-6">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
@@ -77,6 +111,13 @@ export default function CommentSection({ book }: CommentSectionProps) {
           </TooltipProvider>
           <Button onClick={handleCommentPosting}>Post comment</Button>
         </div>
+      </div>
+      <div>
+      {[...comments]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .map((comment) => (
+          <Comment key={comment.id} {...comment} onDeletion={handleCommentDeletion} />
+        ))}
       </div>
     </div>
   )
