@@ -48,7 +48,7 @@ export default authenticatedProcedure
       ) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
-          message: 'Reserver cannot confirm of reject reservation',
+          message: 'Reserver cannot confirm or reject reservation',
         })
       }
 

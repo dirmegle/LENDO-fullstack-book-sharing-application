@@ -7,12 +7,10 @@ module.exports = {
       extend: {
         colors: {
           border: 'var(--border)',
-          input: '#ebddd3',
+          input: '#F8FAFC',
           ring: 'var(--ring)',
           background: '#F8FAFC',
           foreground: 'var(--foreground)',
-          stoneDark: '#F3EBE5',
-          darkBlue: '#0f172a',
           primary: {
             DEFAULT: 'var(--primary)',
             foreground: 'hsl(var(--primary-foreground))'
@@ -39,7 +37,7 @@ module.exports = {
             purple: '#B0A8FE'
           },
           popover: {
-            DEFAULT: 'hsl(var(--popover))',
+            DEFAULT: '#F8FAFC',
             foreground: 'hsl(var(--popover-foreground))'
           },
           card: {
