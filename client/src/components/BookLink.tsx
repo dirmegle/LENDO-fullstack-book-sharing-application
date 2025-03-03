@@ -1,4 +1,4 @@
-import noCover from '@/assets/images/noCover.png'
+import BookCover from './BookCover'
 
 interface BookLinkProps {
     coverImage: string
@@ -12,9 +12,7 @@ export default function BookLink({coverImage, title, author, isbn, onClick}: Boo
 
   return (
     <div className="flex flex-row mb-2 hover:bg-muted-purple hover:cursor-pointer p-2" onClick={onClick}>
-      <div className="w-[60px] h-[90px] min-w-[60px] min-h-[90px] mr-2 border border-border">
-        <img src={coverImage !== "" ? coverImage : noCover} alt={`Book cover for ${title} by ${author}`} className="h-full w-full object-cover"/>
-      </div>
+      <BookCover coverImage={coverImage} title={title} author={author}/>
     <div className="flex flex-col justify-center">
         <h4 className="text-base font-semibold">{title}</h4>
         <h6 className="text-sm">{author}</h6>

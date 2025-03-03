@@ -69,6 +69,7 @@ export default function ReservationHandler({ bookCopyId }: ReservationHandlerPro
   const isReservationDuplicating = () => {
     const reserverIds = activeReservations.flatMap((reservation) => reservation.reserverId)
     if (user) {
+      console.log(reserverIds)
       return reserverIds.includes(user.id)
     }
   }
@@ -90,7 +91,7 @@ export default function ReservationHandler({ bookCopyId }: ReservationHandlerPro
     }
 
     try {
-      if (!isReservationDuplicating) {
+      if (!isReservationDuplicating()) {
         const createdReservation = await trpc.reservation.createReservation.mutate(reservation)
 
         if (createdReservation) {
@@ -164,6 +165,7 @@ export default function ReservationHandler({ bookCopyId }: ReservationHandlerPro
       </div>
         <Button onClick={handleReservationCreation}>Reserve</Button>
       </div>
+      {activeReservations.map((reservation) => (<p>{`${reservation.id} ${reservation.status}`}</p>))}
     </div>
   )
 }

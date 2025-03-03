@@ -13,6 +13,5 @@ export default authenticatedProcedure
   .query(async ({ input: { bookCopyId }, ctx: { repos } }) => {
     const reservations =
       await repos.reservationsRepository.getActiveReservationsByBookCopyId(bookCopyId)
-
     return reservations
   })

@@ -30,7 +30,7 @@ export function userRepository(db: Database) {
     async findByBookCopyId(bookCopyId: string): Promise<Selectable<User> | undefined> {
       return db
         .selectFrom('user')
-        .selectAll()
+        .selectAll('user')
         .innerJoin('bookCopy', 'bookCopy.ownerId', 'user.id')
         .where('bookCopy.id', '=', bookCopyId)
         .executeTakeFirst()

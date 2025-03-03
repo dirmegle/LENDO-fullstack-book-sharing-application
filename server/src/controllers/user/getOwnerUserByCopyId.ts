@@ -3,7 +3,6 @@ import { userRepository } from '@server/repositories/userRepository'
 import provideRepos from '@server/trpc/provideRepos'
 import { TRPCError } from "@trpc/server";
 import { bookCopySchema } from "@server/entities/bookCopy";
-import { printer } from "prettier/doc";
 
 export default authenticatedProcedure
   .use(
@@ -22,6 +21,8 @@ export default authenticatedProcedure
             message: 'We could not find an account for this book copy id',
           })
         }
+
+    console.log(user)
 
     return user
   })
