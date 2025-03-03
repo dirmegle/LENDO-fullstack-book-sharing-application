@@ -12,6 +12,7 @@ export function createDatabase(options: pg.PoolConfig): Kysely<DB> {
     dialect: new PostgresDialect({
       pool: new pg.Pool(options),
     }),
+    log: ['query', 'error'],
     plugins: [new CamelCasePlugin(), new ParseJSONResultsPlugin()],
   })
 }

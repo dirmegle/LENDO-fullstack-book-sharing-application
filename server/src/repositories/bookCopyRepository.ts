@@ -43,6 +43,53 @@ export function bookCopyRepository(db: Database) {
         .executeTakeFirst()
     },
 
+    async getBookCopiesByFriends(userId: string): Promise<BookCopy[]> {
+      return db
+        .selectFrom('bookCopy')
+        .selectAll()
+        .innerJoin('friendship', (join) =>
+          join
+            .on('friendship.status', '=', 'accepted')
+            .on((eb) =>
+              eb.or([
+                eb.and([
+                  eb('friendship.fromUserId', '=', userId),
+                  eb('friendship.toUserId', '=', eb.ref('bookCopy.ownerId')),
+                ]),
+                eb.and([
+                  eb('friendship.toUserId', '=', userId),
+                  eb('friendship.fromUserId', '=', eb.ref('bookCopy.ownerId')),
+                ]),
+              ])
+            )
+        )
+        .execute()
+    },
+
+    async getBookCopiesByFriendsAndISBN(userId: string, isbn: string): Promise<Pick<BookCopy, 'id'>[]> {
+      return db
+        .selectFrom('bookCopy')
+        .select(['bookCopy.id'])
+        .innerJoin('friendship', (join) =>
+          join
+            .on('friendship.status', '=', 'accepted')
+            .on((eb) =>
+              eb.or([
+                eb.and([
+                  eb('friendship.fromUserId', '=', userId),
+                  eb('friendship.toUserId', '=', eb.ref('bookCopy.ownerId')),
+                ]),
+                eb.and([
+                  eb('friendship.toUserId', '=', userId),
+                  eb('friendship.fromUserId', '=', eb.ref('bookCopy.ownerId')),
+                ]),
+              ])
+            )
+        )
+        .where('bookCopy.isbn', '=', isbn)
+        .execute()
+    },
+
     async updateLendability(id: string): Promise<Updateable<BookCopy>> {
       return db
         .updateTable('bookCopy')

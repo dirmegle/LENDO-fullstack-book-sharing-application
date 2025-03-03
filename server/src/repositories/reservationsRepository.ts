@@ -70,6 +70,25 @@ export function reservationsRepository(db: Database) {
       ) as ReservationWithISOString[]
     },
 
+    async getReservationsByReserverIdAndISBN(
+      reserverId: string, isbn: string
+    ): Promise<Selectable<ReservationWithISOString>[]> {
+      const reservations = await db
+        .selectFrom('reservation')
+        .innerJoin('bookCopy', 'bookCopy.id', 'reservation.bookCopyId')
+        .innerJoin('book', 'book.isbn', 'bookCopy.isbn')
+        .selectAll()
+        .where('reservation.status', 'in', ['confirmed', 'pending'])
+        .where('reservation.reserverId', '=', reserverId)
+        .where('book.isbn', '=', isbn)
+        .execute()
+
+      return mapISOStringObjectArray(
+        reservations,
+        dateProperties
+      ) as ReservationWithISOString[]
+    },
+
     async getDatesByBookCopyId(
       bookCopyId: string
     ): Promise<

@@ -27,6 +27,15 @@ export function userRepository(db: Database) {
       return user
     },
 
+    async findByBookCopyId(bookCopyId: string): Promise<Selectable<User> | undefined> {
+      return db
+        .selectFrom('user')
+        .selectAll('user')
+        .innerJoin('bookCopy', 'bookCopy.ownerId', 'user.id')
+        .where('bookCopy.id', '=', bookCopyId)
+        .executeTakeFirst()
+    },
+
     async findByUserId(id: string): Promise<Selectable<User> | undefined> {
       const user = await db
         .selectFrom('user')

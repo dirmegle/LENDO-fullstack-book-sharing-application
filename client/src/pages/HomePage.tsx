@@ -7,7 +7,8 @@ export default function HomePage() {
   return (
     <div className="h-[2000px]">
       <Button>Home page</Button>
-      {user && <h1>{user.email}</h1>}
+      {user && <h1>{user.id}</h1>}
+      {user && <h1>{user.firstName}</h1>}
     </div>
   )
 }

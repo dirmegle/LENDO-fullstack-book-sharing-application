@@ -1,8 +1,8 @@
 import { Card } from "@/components/Card";
-import LoginForm from "@/components/forms/LoginForm";
-import SignupForm from "@/components/forms/SignupForm";
+import LoginForm from "@/components/Forms/LoginForm";
+import SignupForm from "@/components/Forms/SignupForm";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/Tabs";
-import { Toaster } from "@/components/toast/Toaster";
+import { Toaster } from "@/components/Toast/Toaster";
 import { useSearchParams } from "react-router-dom";
 import AbstractOne from "@/assets/icons/abstractOne.svg?react"
 import AbstractTwo from "@/assets/icons/abstractTwo.svg?react"

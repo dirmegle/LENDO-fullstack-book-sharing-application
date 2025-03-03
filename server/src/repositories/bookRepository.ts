@@ -21,5 +21,15 @@ export function bookRepository(db: Database) {
 
       return book
     },
+
+    async getBookByBookCopyId(bookCopyId: string): Promise<Book | undefined> {
+      const book =  await db
+      .selectFrom('book')
+      .innerJoin('bookCopy', 'book.isbn', 'bookCopy.isbn')
+      .select(['book.author', 'book.categories', 'book.coverImage', 'book.description', 'book.isbn', 'book.title'])
+      .where('bookCopy.id', '=', bookCopyId)
+      .executeTakeFirst();
+      return book;
+    },
   }
 }
