@@ -2,21 +2,37 @@
 
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
-
 import { cn } from "@/lib/utils"
+import { cva, type VariantProps } from "class-variance-authority"
 
 const Tabs = TabsPrimitive.Root
 
+const tabsListVariants = cva(
+  "h-10 items-center justify-center rounded-md p-1 text-foreground border border-border",
+  {
+    variants: {
+      variant: {
+        default: "bg-accent-purple",
+        peach: "bg-accent-peach",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+)
+
+interface TabsListProps
+  extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>,
+    VariantProps<typeof tabsListVariants> {}
+
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
+  TabsListProps
+>(({ className, variant, ...props }, ref) => (
   <TabsPrimitive.List
     ref={ref}
-    className={cn(
-      "h-10 items-center justify-center rounded-md bg-accent-purple p-1 text-foreground border border-border",
-      className
-    )}
+    className={cn(tabsListVariants({ variant, className }))}
     {...props}
   />
 ))

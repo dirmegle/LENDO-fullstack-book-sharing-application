@@ -22,7 +22,5 @@ export default authenticatedProcedure
           })
         }
 
-    console.log(user)
-
     return user
   })

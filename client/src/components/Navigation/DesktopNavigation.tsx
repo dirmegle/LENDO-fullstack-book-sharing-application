@@ -1,6 +1,6 @@
 import { getNavLinks } from '@/router/pagesConfig'
-import NavLink from './navLink'
-import styles from './navigation.module.css'
+import NavLink from './NavLink'
+import styles from './Navigation.module.css'
 import classNames from 'classnames'
 import ArrowRight from '@/assets/icons/arrowRight.svg?react'
 import ArrowLeft from '@/assets/icons/arrowLeft.svg?react'

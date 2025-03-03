@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { trpc } from '@/trpc'
 import { formatDate } from '@/utils/formatDate'
 import { ReservationWithISOString } from '@server/entities/reservation'
@@ -17,20 +18,22 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './Tool
 
 interface ReservationProps {
   reservation: ReservationWithISOString
-  book: Book
   bookDetails?: boolean
+  asLink?: boolean
 }
 
 type Status = "pending" | "cancelled" | "completed" | "confirmed" | "rejected" 
 
-export default function Reservation({ reservation, bookDetails = true, book }: ReservationProps) {
+export default function Reservation({ reservation, bookDetails = false, asLink = false }: ReservationProps) {
   const [reservationCopy, setReservationCopy] = useState<ReservationWithISOString>(reservation)
   const [reserverProfile, setReserverProfile] = useState<User | null>(null)
   const [ownerProfile, setOwnerProfile] = useState<User | null>(null)
+  const [book, setBook] = useState<Book | null>(null)
   const [isDialogVisible, setDialogVisibility] = useState(false)
   const [selectedStatus, setSelectedStatus] = useState<string>("")
   const { toast } = useToast()
   const { user } = useUserContext()
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getReserverUser = async () => {
@@ -43,14 +46,20 @@ export default function Reservation({ reservation, bookDetails = true, book }: R
       setOwnerProfile(user)
     }
 
+    const getBook = async () => {
+      const fetchedBook = await trpc.book.getBookByBookCopyId.query({ id: reservation.bookCopyId })
+      if (fetchedBook) {
+        setBook(fetchedBook)
+      }
+    }
+
     getReserverUser()
     getOwnerUser()
-  }, [reservation.reserverId, reservation.bookCopyId])
+    getBook()
+  }, [reservation.reserverId, reservation.bookCopyId, reservation.id])
 
   const isAuthUserOwner = () => {
-    console.log(ownerProfile?.id)
-    console.log(user?.id)  
-    return ownerProfile?.id == user?.id
+    return ownerProfile?.id === user?.id
   }
 
   const fetchStyleDataBasedOnStatus = (status: string) => {
@@ -122,54 +131,70 @@ export default function Reservation({ reservation, bookDetails = true, book }: R
     }
   } 
 
+  const reservationRow = (
+    <div className="flex flex-col lg:flex-row border border-border p-4 items-center justify-between space-y-4 lg:space-y-0">
+      <div className="flex flex-col sm:flex-row items-center w-full lg:w-auto justify-center">
+        <div className="h-7 w-7 flex-shrink-0 hidden lg:block lg:mr-4">
+          {fetchStyleDataBasedOnStatus(reservationCopy.status).element}
+        </div>
+        {bookDetails && book && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <div className="lg:mr-4">
+                  <BookCover {...book} />
+                </div>
+                <TooltipContent>{`${book.title} by ${book.author}`}</TooltipContent>
+              </TooltipTrigger>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+        <div className="mt-2 lg:mt-0 text-center lg:text-left">
+          <h6 className="font-medium text-lg">
+            {isAuthUserOwner()
+              ? `Reserved by ${reserverProfile?.firstName} ${reserverProfile?.lastName}`
+              : `Reserved from ${ownerProfile?.firstName} ${ownerProfile?.lastName}`}
+          </h6>
+          <p className="text-lg">
+            {`${formatDate(reservationCopy.startDate)} - ${formatDate(reservationCopy.endDate)}`}
+          </p>
+        </div>
+      </div>
+      <div className="flex flex-row items-center space-x-2">
+        <div className={`uppercase border border-border p-1 font-medium ${fetchStyleDataBasedOnStatus(reservationCopy.status).color}`}>
+          {reservationCopy.status}
+        </div>
+        <DialogTrigger onClick={(e) => asLink && e.stopPropagation()}>
+          <Button
+            variant="link"
+            onClick={() => setDialogVisibility(true)}
+            disabled={
+              reservationCopy.status === 'cancelled' ||
+              reservationCopy.status === 'rejected' ||
+              reservationCopy.status === 'completed'
+            }
+          >
+            Change status
+          </Button>
+        </DialogTrigger>
+      </div>
+    </div>
+  )
+
   return (
     <>
       <Dialog>
-          {reserverProfile && ownerProfile && (
-          <div className="flex flex-col lg:flex-row border border-border p-4 items-center justify-between space-y-4 lg:space-y-0">
-            <div className="flex flex-col sm:flex-row items-center w-full lg:w-auto justify-center">
-              <div className="h-7 w-7 flex-shrink-0 hidden lg:block lg:mr-4">
-                {fetchStyleDataBasedOnStatus(reservationCopy.status).element}
-              </div>
-              {bookDetails && (
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <div className='lg:mr-4'>
-
-                      <BookCover {...book} />
-                        </div>
-                      <TooltipContent>{`${book.title} by ${book.author}`}</TooltipContent>
-                      </TooltipTrigger>
-                    </Tooltip>
-                  </TooltipProvider>
-              )}
-              <div className="mt-2 lg:mt-0 text-center lg:text-left">
-                <h6 className="font-medium text-lg">
-                  {isAuthUserOwner()
-                    ? `Reserved by ${reserverProfile.firstName} ${reserverProfile.lastName}`
-                    : `Reserved from ${ownerProfile.firstName} ${ownerProfile.lastName}`}
-                </h6>
-                <p className="text-lg">
-                  {`${formatDate(reservationCopy.startDate)} - ${formatDate(reservationCopy.endDate)}`}
-                </p>
-              </div>
+        {reserverProfile && ownerProfile && (
+          asLink && book ? (
+            <div
+              onClick={() => navigate(`/books/${book.isbn.replace(', ', '+')}`, { state: book })}
+              className="cursor-pointer hover:bg-accent-purple/20"
+            >
+              {reservationRow}
             </div>
-            <div className="flex flex-row items-center space-x-2">
-              <div className={`uppercase border border-border p-1 font-medium ${fetchStyleDataBasedOnStatus(reservationCopy.status).color}`}>
-                {reservationCopy.status}
-              </div>
-              <DialogTrigger>
-                <Button
-                  variant="link"
-                  onClick={() => setDialogVisibility(true)}
-                  disabled={reservationCopy.status === 'cancelled' || reservationCopy.status === 'rejected'}
-                >
-                  Change status
-                </Button>
-              </DialogTrigger>
-            </div>
-          </div>
+          ) : (
+            reservationRow
+          )
         )}
         {isDialogVisible && (
           <DialogContent>

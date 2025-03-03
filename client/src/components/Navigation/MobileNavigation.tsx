@@ -1,5 +1,5 @@
 import { getNavLinks } from "@/router/pagesConfig";
-import NavLink from './navLink';
+import NavLink from './NavLink';
 import { Button } from "../Button";
 import BurgerMenu from "@/assets/icons/burger.svg?react";
 import { useState } from "react";

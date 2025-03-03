@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
-import DesktopNavigation from "@/components/navigation/desktopNavigation";
-import MobileNavigation from "@/components/navigation/mobileNavigation";
-import { Toaster } from "@/components/toast/Toaster";
+import DesktopNavigation from "@/components/Navigation/DesktopNavigation";
+import MobileNavigation from "@/components/Navigation/MobileNavigation";
+import { Toaster } from "@/components/Toast/Toaster";
 import { Outlet } from "react-router-dom";
 
 export default function AuthPageLayout() {
