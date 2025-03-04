@@ -59,7 +59,7 @@ export default function Reservations() {
             filterOnlyPending(ownerReservations).length > 0 && (
               <>
                 <h2 className="font-medium my-2">Check these out</h2>
-                <div>
+                <div className='flex flex-col gap-2'>
                   {filterOnlyPending(ownerReservations).map((reservation) => (
                     <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
                   ))}
@@ -70,7 +70,7 @@ export default function Reservations() {
             filterOnlyPending(reserverReservations).length > 0 && (
               <>
                 <h2 className="font-medium my-2">Still waiting for a response on these</h2>
-                <div>
+                <div className='flex flex-col gap-2'>
                   {filterOnlyPending(reserverReservations).map((reservation) => (
                     <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
                   ))}
@@ -82,6 +82,7 @@ export default function Reservations() {
       </div>
       <div>
       <h2 className="font-medium mb-2">All reservations</h2>
+      <div className='flex flex-col gap-2'>
         {activeTab === 'owner'
           ? filterOutPending(ownerReservations).map((reservation) => (
               <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
@@ -89,6 +90,8 @@ export default function Reservations() {
           : filterOutPending(reserverReservations).map((reservation) => (
               <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
             ))}
+      </div>
+        
       </div>
     </div>
   )
