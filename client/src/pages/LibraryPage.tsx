@@ -33,7 +33,7 @@ export default function LibraryPage() {
           <TabsTrigger value="friends">Friends</TabsTrigger>
         </TabsList>
       </Tabs>
-      <div className="mt-4 grid 2xl:grid-cols-7 xl:grid-cols-4  md:grid-cols-3 sm:grid-cols-2 gap-2">
+      <div className="mt-6 grid 2xl:grid-cols-7 xl:grid-cols-4  md:grid-cols-3 sm:grid-cols-2 gap-2">
         {getBooksByTabValue().map((bookCopy) => (
           <BookCard key={bookCopy.id} bookCopy={bookCopy} showOwner={activeTab === 'friends'}/>
         ))}
