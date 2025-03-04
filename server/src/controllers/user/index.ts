@@ -5,6 +5,8 @@ import updateEmail from './updateEmail'
 import getCurrentUser from './getCurrentUser'
 import getUserById from './getUserById'
 import getOwnerUserByCopyId from './getOwnerUserByCopyId'
+import getFriendUsers from './getFriendUsers'
+import getUsersByName from './getUsersByName'
 
 export default router({
   login,
@@ -12,5 +14,7 @@ export default router({
   updateEmail,
   getCurrentUser,
   getUserById,
-  getOwnerUserByCopyId
+  getOwnerUserByCopyId,
+  getFriendUsers,
+  getUsersByName
 })

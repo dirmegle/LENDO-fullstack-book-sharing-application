@@ -1,0 +1,17 @@
+.loader {
+    animation: spinAndPulse 2s infinite ease-in-out;
+    display: block;
+  }
+
+
+@keyframes spinAndPulse {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.5);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}

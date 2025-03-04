@@ -39,6 +39,22 @@ export function friendshipRepository(db: Database) {
         .executeTakeFirst()
     },
 
+    async getAllFriendshipsByUser(
+      userId1: string,
+      userId2: string
+    ): Promise<Selectable<Friendship> | undefined> {
+      return db
+        .selectFrom('friendship')
+        .selectAll()
+        .where((eb) =>
+          eb.or([
+            eb('fromUserId', '=', userId1).and('toUserId', '=', userId2),
+            eb('fromUserId', '=', userId2).and('toUserId', '=', userId1),
+          ])
+        )
+        .executeTakeFirst()
+    },
+
     async findById(id: string): Promise<Selectable<Friendship> | undefined> {
       const friendship = await db
         .selectFrom('friendship')
