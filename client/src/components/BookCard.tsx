@@ -1,14 +1,19 @@
 import { trpc } from '@/trpc'
-import { Book, BookCopy } from '@server/shared/types'
+import { Book, BookCopy, User } from '@server/shared/types'
 import { useEffect, useState } from 'react'
 import BookCover from './BookCover'
+import { useNavigate } from 'react-router-dom'
+import { TooltipContent, TooltipProvider, TooltipTrigger, Tooltip } from '@/components/Tooltip'
 
 interface BookCardProps {
   bookCopy: BookCopy
+  showOwner?: boolean
 }
 
-export default function BookCard({ bookCopy }: BookCardProps) {
+export default function BookCard({ bookCopy, showOwner=false }: BookCardProps) {
   const [book, setBook] = useState<Book | null>(null)
+  const [ownerProfile, setOwnerProfile] = useState<User | null>(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const getBooks = async () => {
@@ -16,18 +21,35 @@ export default function BookCard({ bookCopy }: BookCardProps) {
       setBook(book)
     }
 
+    const getOwnerProfile = async () => {
+      const user = await trpc.user.getOwnerUserByCopyId.query({id: bookCopy.id})
+      setOwnerProfile(user)
+    }
+
     getBooks()
+    getOwnerProfile()
   }, [bookCopy.id])
 
   return (
     book && (
-      <div className='flex flex-row w-54'>
-        <BookCover {...book} />
-        <div className='flex flex-col'>
-            <h3>{book.title}</h3>
-            <p>{book.author}</p>
+      <TooltipProvider>
+        <Tooltip>
+        <div
+        onClick={() => navigate(`/books/${book.isbn.replace(', ', '+')}`, { state: book })}
+        className="cursor-pointer hover:bg-accent-purple/20 w-full flex flex-col items-center p-4 border rounded-lg shadow-sm"
+      >
+        <TooltipTrigger>
+        <BookCover {...book} isLarge />
+        </TooltipTrigger>
+        <div className="flex flex-col mt-2  md:mt-0">
+          <h3 className="text-lg font-semibold text-center line-clamp-2">{book.title}</h3>
+          <p className="text-gray-600 text-sm text-center line-clamp-1">{book.author}</p>
         </div>
       </div>
+      {showOwner && <TooltipContent>{`Owned by ${ownerProfile?.firstName} ${ownerProfile?.lastName}`}</TooltipContent>}
+      </Tooltip>
+      </TooltipProvider>
+      
     )
   )
 }

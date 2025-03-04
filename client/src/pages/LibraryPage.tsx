@@ -33,9 +33,9 @@ export default function LibraryPage() {
           <TabsTrigger value="friends">Friends</TabsTrigger>
         </TabsList>
       </Tabs>
-      <div className="mt-4 flex flex-row flex-wrap">
+      <div className="mt-4 grid 2xl:grid-cols-7 xl:grid-cols-4  md:grid-cols-3 sm:grid-cols-2 gap-2">
         {getBooksByTabValue().map((bookCopy) => (
-          <BookCard key={bookCopy.id} bookCopy={bookCopy} />
+          <BookCard key={bookCopy.id} bookCopy={bookCopy} showOwner={activeTab === 'friends'}/>
         ))}
       </div>
     </div>
