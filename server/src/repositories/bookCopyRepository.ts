@@ -46,7 +46,7 @@ export function bookCopyRepository(db: Database) {
     async getBookCopiesByFriends(userId: string): Promise<BookCopy[]> {
       return db
         .selectFrom('bookCopy')
-        .selectAll()
+        .selectAll('bookCopy')
         .innerJoin('friendship', (join) =>
           join
             .on('friendship.status', '=', 'accepted')
