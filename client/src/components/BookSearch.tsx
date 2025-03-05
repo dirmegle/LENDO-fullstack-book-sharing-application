@@ -6,13 +6,16 @@ import type { Book } from '@server/shared/types'
 import useHandleOutsideClick from '@/hooks/useHandleOutsideClick'
 import BookLink from './BookLink'
 import { useNavigate } from 'react-router-dom'
+import Loader from '@/components/Loader/Loader'
 
 export default function BookSearch() {
   const [activeTab, setActiveTab] = useState('author')
   const [searchValue, setSearchValue] = useState('')
   const [results, setResults] = useState<Book[]>([])
+  const [isLoading, setIsLoading] = useState(false)
   const resultsWindowRef = useRef(null)
-  const navigate = useNavigate();
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const navigate = useNavigate()
 
   const placeholder = `Search books by ${activeTab}`
 
@@ -30,7 +33,7 @@ export default function BookSearch() {
     return await trpc.book.fetchBooksFromAPI.query(searchQuery)
   }
 
-  const handleInputChange = async (
+  const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement> | React.ClipboardEvent<HTMLInputElement>
   ) => {
     let inputValue: string
@@ -43,23 +46,33 @@ export default function BookSearch() {
 
     setSearchValue(inputValue)
 
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current)
+    }
+
     if (inputValue === '') {
       setResults([])
+      setIsLoading(false)
       return
     }
 
-    try {
-      const books = await searchBooks(activeTab, inputValue)
-      setResults(books)
-    } catch (error) {
-      console.error(error)
-    }
+    setIsLoading(true)
+    debounceTimerRef.current = setTimeout(async () => {
+      try {
+        const books = await searchBooks(activeTab, inputValue)
+        setResults(books)
+      } catch (error) {
+        console.error(error)
+      } finally {
+        setIsLoading(false)
+      }
+    }, 500)
   }
 
   const handleBookLinkClick = (book: Book) => {
     setSearchValue('')
     setResults([])
-    navigate(`/books/${book.isbn.replace(', ', '+')}`, {state: book})
+    navigate(`/books/${book.isbn.replace(', ', '+')}`, { state: book })
   }
 
   useHandleOutsideClick(resultsWindowRef.current, () => setResults([]))
@@ -68,14 +81,20 @@ export default function BookSearch() {
     <div className="flex md:flex-row gap-2 flex-col-reverse">
       <div className="relative md:w-72 w-full">
         <Input value={searchValue} placeholder={placeholder} onChange={handleInputChange} />
-        {results.length > 0 && (
+        {searchValue !== '' && (isLoading || results.length > 0) && (
           <div
             className="p-2 absolute top-full left-0 w-full z-20 bg-background max-h-60 overflow-auto border border-t-0 border-border"
             ref={resultsWindowRef}
           >
-            {results.map((book: Book) => (
-              <BookLink onClick={() => handleBookLinkClick(book)} {...book} />
-            ))}
+            {isLoading && <Loader />}
+            {results.length > 0 &&
+              results.map((book: Book) => (
+                <BookLink
+                  key={book.isbn}
+                  onClick={() => handleBookLinkClick(book)}
+                  {...book}
+                />
+              ))}
           </div>
         )}
       </div>
