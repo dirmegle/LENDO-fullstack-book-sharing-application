@@ -63,7 +63,7 @@ export default function FriendsPage() {
   return (
     <div>
       <h1 className="font-medium text-3xl mb-4">Friends</h1>
-      <FriendSearch />
+      <FriendSearch existingFriends={friends}/>
       {getReceivedPendingFriendships().length > 0 && (
         <>
         <h2 className="font-medium my-2">Your pending invites</h2>
