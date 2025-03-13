@@ -36,12 +36,12 @@ export default function BookCard({ bookCopy, showOwner=false }: BookCardProps) {
         <Tooltip>
         <div
         onClick={() => navigate(`/books/${book.isbn.replace(', ', '+')}`, { state: book })}
-        className="cursor-pointer hover:bg-accent-purple/20 w-full flex flex-col items-center p-4 border rounded-lg shadow-sm"
+        className="cursor-pointer hover:bg-accent-peach/20 w-full h-full flex flex-col items-center p-4 transition ease-in-out duration-300"
       >
         <TooltipTrigger>
         <BookCover {...book} isLarge />
         </TooltipTrigger>
-        <div className="flex flex-col mt-2  md:mt-0">
+        <div className="flex flex-col mt-2 md:mt-0">
           <h3 className="text-lg font-semibold text-center line-clamp-2">{book.title}</h3>
           <p className="text-gray-600 text-sm text-center line-clamp-1">{book.author}</p>
         </div>

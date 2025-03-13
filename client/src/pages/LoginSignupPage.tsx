@@ -9,6 +9,7 @@ import AbstractTwo from "@/assets/icons/abstractTwo.svg?react"
 import styles from './LoginSignupPage.module.css'
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/Separator";
+import Logo from "@/components/Logo";
 
 export default function LoginSignupPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -23,12 +24,18 @@ export default function LoginSignupPage() {
   return (
     <>    
     <div className="grid rid-cols-1 lg:grid-cols-3 h-[100vh] grid-rows-[auto,1fr] lg:grid-rows-[1fr] overflow-hidden">
-      <div className="bg-background flex flex-col items-center px-10 lg:items-start lg:pt-40 lg:pb-0 pt-20 pb-20 lg:justify-start justify-center max-h-[max-content] lg:max-h-none" >
+      <div className="relative">
+      <div className="absolute top-10 left-1/2 transform -translate-x-1/2 lg:left-10 lg:top-10 lg:transform-none">
+  <Logo />
+</div>
+      <div className="bg-background flex flex-col items-center px-10 lg:items-start lg:pt-60 lg:pb-0 pt-20 pb-20 lg:justify-start justify-center max-h-[max-content] lg:max-h-none" >
         <h1 className="text-5xl mb-4 text-center lg:text-left">Discover Books, Share Stories</h1>
-        <Separator />
+        <Separator className="mb-4"/>
         <p className="text-center lg:text-left">Every page is a new opportunity to connect. Reserve must-read titles, dive into engaging discussions, and build meaningful connections with your friends.</p>
       </div>
-      <div className={cn("h-full flex lg:pt-40 pt-20 justify-center lg:col-span-2 items-start px-2 relative", styles.formBackground)}>
+      </div>
+      
+      <div className={cn("h-full flex lg:pt-60 pt-20 justify-center lg:col-span-2 items-start px-2 relative", styles.formBackground)}>
         <Tabs value={activeTab} onValueChange={handleTabChange} className="sm:w-[400px] w-[350px] z-20">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="login">Login</TabsTrigger>

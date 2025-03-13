@@ -31,6 +31,7 @@ export interface Book {
   author: string
   categories: string
   coverImage: string
+  dailyRead: string | null
   description: string
   isbn: string
   title: string

@@ -23,13 +23,65 @@ export function bookRepository(db: Database) {
     },
 
     async getBookByBookCopyId(bookCopyId: string): Promise<Book | undefined> {
-      const book =  await db
-      .selectFrom('book')
-      .innerJoin('bookCopy', 'book.isbn', 'bookCopy.isbn')
-      .select(['book.author', 'book.categories', 'book.coverImage', 'book.description', 'book.isbn', 'book.title'])
-      .where('bookCopy.id', '=', bookCopyId)
-      .executeTakeFirst();
-      return book;
+      const book = await db
+        .selectFrom('book')
+        .innerJoin('bookCopy', 'book.isbn', 'bookCopy.isbn')
+        .select([
+          'book.author',
+          'book.categories',
+          'book.coverImage',
+          'book.description',
+          'book.isbn',
+          'book.title',
+          'book.dailyRead',
+        ])
+        .where('bookCopy.id', '=', bookCopyId)
+        .executeTakeFirst()
+      return book
+    },
+
+    async getBookByDailyRead(dateISO: string): Promise<Book | undefined> {
+      return db
+        .selectFrom('book')
+        .select([
+          'book.author',
+          'book.categories',
+          'book.coverImage',
+          'book.description',
+          'book.isbn',
+          'book.title',
+          'book.dailyRead',
+        ])
+        .where('book.dailyRead', '=', dateISO)
+        .executeTakeFirst()
+    },
+
+    async getBookByISBN(isbn: string): Promise<Book | undefined> {
+      return db
+        .selectFrom('book')
+        .select([
+          'book.author',
+          'book.categories',
+          'book.coverImage',
+          'book.description',
+          'book.isbn',
+          'book.title',
+          'book.dailyRead',
+        ])
+        .where('book.isbn', '=', isbn)
+        .executeTakeFirst()
+    },
+
+    async addDailyReadDate(
+      dateISO: string,
+      isbn: string
+    ): Promise<Book | undefined> {
+      return db
+        .updateTable('book')
+        .set({ dailyRead: dateISO })
+        .where('book.isbn', '=', isbn)
+        .returningAll()
+        .executeTakeFirstOrThrow()
     },
   }
 }

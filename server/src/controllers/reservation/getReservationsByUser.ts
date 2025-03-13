@@ -21,11 +21,6 @@ export default authenticatedProcedure
         : await repos.reservationsRepository.getReservationsByReserverId(
             authUser.id
           )
-    
-    if (role === 'owner') {
-      console.log(`\n\nOWNER:\n${JSON.stringify(reservations, null, 2)}`)
-    } else if (role === 'reserver') {
-      console.log(`\n\nRESERVER:\n${JSON.stringify(reservations, null, 2)}`)
-    }
+  
     return reservations
   })
