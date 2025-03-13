@@ -69,7 +69,6 @@ export default function ReservationHandler({ bookCopyId }: ReservationHandlerPro
   const isReservationDuplicating = () => {
     const reserverIds = activeReservations.flatMap((reservation) => reservation.reserverId)
     if (user) {
-      console.log(reserverIds)
       return reserverIds.includes(user.id)
     }
   }
