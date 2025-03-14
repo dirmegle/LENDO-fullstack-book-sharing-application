@@ -2,7 +2,7 @@ import { fakeBook } from '@server/entities/tests/fakes'
 import fetchBooks, { formulateRequest, getISBN } from '../fetchBooks'
 import type { ReturnedBooks } from '../types'
 
-const mockedBookData = fakeBook()
+const { dailyRead, ...mockedBookData } = fakeBook();
 
 const volumeInfoWithoutIdentifier = {
   title: mockedBookData.title,

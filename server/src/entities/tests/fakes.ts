@@ -54,6 +54,7 @@ export const fakeBook = <T extends Partial<Book>>(
   title: random.string(),
   description: random.string(),
   isbn: String(random.integer({ min: 1000000000, max: 9999999999 })),
+  dailyRead: null,
   ...overrides,
 })
 
