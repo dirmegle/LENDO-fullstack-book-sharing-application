@@ -3,11 +3,11 @@ import { Separator } from './../Separator'
 import { trpc } from '@/trpc'
 import useUserContext from '@/context/UserContext'
 import { useEffect, useState } from 'react'
-import Reservation from '../ReservationRow'
+import ReservationRow from '../ReservationRow'
 import { Button } from '../Button'
 import ArrowUp from '@/assets/icons/arrowUp.svg?react'
 import ArrowDown from '@/assets/icons/arrowDown.svg?react'
-import ReservationHandler from '../ReservationHandler' // Make sure this import exists
+import ReservationHandler from '../ReservationHandler'
 
 interface ReservationsByBookProps {
   book: Book
@@ -62,7 +62,7 @@ export default function ReservationsByBook({ book }: ReservationsByBookProps) {
           <div className="flex flex-col gap-2">
             {activeReservationsForOwner.length > 0 ? (
               activeReservationsForOwner.map((reservation) => (
-                <Reservation reservation={reservation} key={reservation.id} book={book} />
+                <ReservationRow reservation={reservation} key={reservation.id} />
               ))
             ) : (
               <p>None of your friends have reserved this book yet.</p>
@@ -73,7 +73,7 @@ export default function ReservationsByBook({ book }: ReservationsByBookProps) {
       <h3 className="text-2xl text-center md:text-left my-4">Reservations from friends</h3>
       <div className="flex flex-col gap-2">
         {activeReservationsForNonOwner.map((reservation) => (
-          <Reservation reservation={reservation} key={reservation.id} book={book} />
+          <ReservationRow reservation={reservation} key={reservation.id}/>
         ))}
       </div>
       <Button

@@ -1,4 +1,4 @@
-import type { Reservation } from '@server/database'
+import type { Reservation } from '@server/database/types'
 import { z } from 'zod'
 
 export const reservationStatus = [
