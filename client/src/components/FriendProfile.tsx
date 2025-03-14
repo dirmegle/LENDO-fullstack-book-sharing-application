@@ -1,4 +1,3 @@
-import { UserWithFriendship } from '@server/shared/types'
 import UserProfilePic from '@/assets/icons/userProfilePic.svg?react'
 
 interface FriendsRowProps {
