@@ -1,6 +1,6 @@
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
-import { fakeBook } from '@server/entities/tests/fakes'
+import { fakeBook, fakeBookCopyWithId, fakeUserWithId } from '@server/entities/tests/fakes'
 import { insertAll } from '@tests/utils/records'
 import { bookRepository } from '../bookRepository'
 
@@ -29,5 +29,15 @@ describe('findByISBN', () => {
   it('returns undefined if ISBN does not exist', async () => {
     const foundBook = await repository.findByISBN('0101010101')
     expect(foundBook).toBeUndefined()
+  })
+})
+
+describe('getBookByBookCopyId', () => {
+  it('returns book if it exists', async () => {
+    const [existingBook] = await insertAll(db, 'book', [fakeBook()])
+    const [owner] = await insertAll(db, 'user', [fakeUserWithId()])
+    const [existingBookCopy] = await insertAll(db, 'bookCopy', [fakeBookCopyWithId({isbn: existingBook.isbn, ownerId: owner.id})])
+    const result = await repository.getBookByBookCopyId(existingBookCopy.id)
+    expect(result).toEqual(existingBook)
   })
 })
