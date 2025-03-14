@@ -8,7 +8,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 const Tabs = TabsPrimitive.Root
 
 const tabsListVariants = cva(
-  "h-10 items-center justify-center rounded-md p-1 text-foreground border border-border",
+  "h-10 items-center justify-center rounded-md p-1 text-foreground border border-border shadow-[3px_3px_#141414]",
   {
     variants: {
       variant: {

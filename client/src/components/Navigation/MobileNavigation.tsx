@@ -4,6 +4,7 @@ import { Button } from "../Button";
 import BurgerMenu from "@/assets/icons/burger.svg?react";
 import { useState } from "react";
 import classNames from "classnames";
+import Logo from "../Logo";
 
 export default function MobileNavigation() {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -39,6 +40,9 @@ export default function MobileNavigation() {
         <Button variant="outline" size="icon" onClick={handleClick}>
           <BurgerMenu />
         </Button>
+        <div>
+        <Logo />
+      </div>
       </div>
       <nav className={navMenuClasses}>
         {navLinks}

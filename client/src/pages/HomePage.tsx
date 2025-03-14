@@ -47,7 +47,7 @@ export default function HomePage() {
       <Separator className="my-4" />
       <div className="mb-8">
         <h2 className="font-medium text-3xl mb-4">See what's new:</h2>
-        <div className="border border-border h-content max-h-[300px] overflow-y-auto">
+        <div className="border border-border h-content max-h-[300px] overflow-y-auto shadow-[3px_3px_#141414]">
           {notifications.length > 0 ? (
             notifications.map((notification) => <Notification notification={notification} />)
           ) : (
@@ -62,7 +62,7 @@ export default function HomePage() {
             onClick={() =>
               navigate(`/books/${dailyRead.isbn.replace(', ', '+')}`, { state: dailyRead })
             }
-            className="border border-border p-4 hover:bg-accent-green/90 transition ease-in-out duration-300 cursor-pointer bg-accent-green"
+            className="border border-border p-4 hover:bg-accent-green/90 transition ease-in-out duration-300 cursor-pointer bg-accent-green shadow-[3px_3px_#141414]"
           >
             <div className="flex md:flex-row flex-col gap-4 md:items-start items-center justify-center">
               <div className="md:min-h-[216px] md:min-w-[144px] h-[216px] w-[144px] border">
