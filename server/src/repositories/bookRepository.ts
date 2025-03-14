@@ -1,5 +1,4 @@
 import type { Book, Database } from '@server/database'
-import { bookKeys } from '@server/entities/book'
 import { type Insertable, type Selectable } from 'kysely'
 
 export function bookRepository(db: Database) {
@@ -8,14 +7,14 @@ export function bookRepository(db: Database) {
       return db
         .insertInto('book')
         .values(book)
-        .returning(bookKeys)
+        .returningAll()
         .executeTakeFirstOrThrow()
     },
 
     async findByISBN(isbn: string): Promise<Selectable<Book> | undefined> {
       const book = await db
         .selectFrom('book')
-        .select(bookKeys)
+        .selectAll()
         .where('isbn', 'like', `%${isbn}%`)
         .executeTakeFirst()
 

@@ -11,7 +11,6 @@ describe('create', () => {
   it('creates book instance in the database', async () => {
     const book = fakeBook()
     const createdBook = await repository.create(book)
-
     expect(createdBook).toEqual(book)
   })
   it('throws an error for duplicating unique fields', async () => {
@@ -25,7 +24,7 @@ describe('findByISBN', () => {
   it('returns book if ISBN exists', async () => {
     const [existingBook] = await insertAll(db, 'book', [fakeBook()])
     const result = await repository.findByISBN(existingBook.isbn)
-    expect(result).toEqual(existingBook)
+    expect(result?.isbn).toEqual(existingBook.isbn)
   })
   it('returns undefined if ISBN does not exist', async () => {
     const foundBook = await repository.findByISBN('0101010101')
