@@ -84,14 +84,14 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
         <div className="lg:h-72 h-36 w-full border border-border bg-accent-green overflow-hidden"></div>
         <div className="sm:max-w-[80%] flex flex-col">
           <div className="flex md:flex-row flex-col gap-4 justify-center md:max-w-[80%] md:items-start items-center">
-            <div className="md:min-h-[360px] md:min-w-[240px] h-[270px] w-[180px] -mt-12 border">
+            <div className="md:min-h-[360px] md:min-w-[240px] h-[270px] w-[180px] -mt-12 border shadow-[3px_3px_#141414]">
               <img
                 src={book.coverImage ? book.coverImage : noCover}
                 alt={`Cover image for ${book.title} by ${book.author}`}
                 className="h-full w-full object-cover"
               />
-              <div className="w-full flex flex-row gap-1 mt-1">
-                <div className='w-full bg-primary text-background font-medium flex items-center justify-center'>{isBookInUserList ? ("In your library") : ("Not owned")}</div>
+              <div className="w-full flex flex-row gap-2 mt-3">
+                <div className='w-full border border-border text-primary font-medium flex items-center justify-center shadow-[3px_3px_#141414]'>{isBookInUserList ? ("In your library") : ("Not owned")}</div>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
@@ -102,7 +102,7 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
                               ? () => setBookRemovalDialogVisibility(true)
                               : () => setBookAdditionDialogVisibility(true)
                           }
-                          size="icon"
+                          size="iconShadow"
                           variant={isBookInUserList ? 'accentGreen' : 'accentPurple'}
                         >
                           {isBookInUserList ? <CheckMark /> : <Add />}

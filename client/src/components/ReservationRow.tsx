@@ -132,7 +132,7 @@ export default function Reservation({ reservation, bookDetails = false, asLink =
   } 
 
   const reservationRow = (
-    <div className="flex flex-col lg:flex-row border border-border p-4 items-center justify-between space-y-4 lg:space-y-0">
+    <div className="flex flex-col lg:flex-row border border-border p-4 items-center justify-between space-y-4 lg:space-y-0 shadow-[3px_3px_#141414]">
       <div className="flex flex-col sm:flex-row items-center w-full lg:w-auto justify-center">
         <div className="h-7 w-7 flex-shrink-0 hidden lg:block lg:mr-4">
           {fetchStyleDataBasedOnStatus(reservationCopy.status).element}

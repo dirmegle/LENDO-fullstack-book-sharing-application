@@ -78,7 +78,7 @@ export default function BookSearch() {
   useHandleOutsideClick(resultsWindowRef.current, () => setResults([]))
 
   return (
-    <div className="flex md:flex-row gap-2 flex-col-reverse">
+    <div className="flex md:flex-row gap-2 flex-col-reverse w-full md:w-auto">
       <div className="relative md:w-72 w-full">
         <Input value={searchValue} placeholder={placeholder} onChange={handleInputChange} />
         {searchValue !== '' && (isLoading || results.length > 0) && (

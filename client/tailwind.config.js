@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors')
+
 module.exports = {
     darkMode: ['class'],
     content: ['./index.html', 'src/**/*.{ts,tsx}'],
@@ -5,9 +7,9 @@ module.exports = {
         extend: {
             colors: {
                 border: 'var(--border)',
-                input: '#F8FAFC',
+                input: 'bg-orange-50',
                 ring: 'var(--ring)',
-                background: '#F8FAFC',
+                background: colors.amber[50],
                 foreground: 'var(--foreground)',
                 primary: {
                     DEFAULT: 'var(--primary)',
