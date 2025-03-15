@@ -1,12 +1,14 @@
 import { Button } from '@/components/Button'
 import FriendProfile from '@/components/FriendProfile'
 import FriendSearch from '@/components/FriendSearch'
+import NoResultsMessage from '@/components/NoResultsMessage'
 import { Separator } from '@/components/Separator'
 import useUserContext from '@/context/UserContext'
 import { useToast } from '@/hooks/useToast'
 import { trpc } from '@/trpc'
 import { UserWithFriendship } from '@server/shared/types'
 import { useEffect, useState } from 'react'
+import illustrationFriends from '@/assets/images/illustrationFriends.png'
 
 export default function FriendsPage() {
   const [friends, setFriends] = useState<UserWithFriendship[]>([])
@@ -81,15 +83,19 @@ export default function FriendsPage() {
         <Separator className='my-4'/>
         </>
       )}
-      <div className="border border-border p-2">
-        <div>
+      {
+        getExistingFriendships().length > 0 ? (
+          <div className="border border-border p-2">
           {getExistingFriendships().map((friend) => (
             <div key={friend.friendshipId}>
               <FriendProfile {...friend} />
             </div>
           ))}
         </div>
-      </div>
+        ) : (
+          <NoResultsMessage message='You have no friends yet. Send out or accept some invites!' illustrationLink={illustrationFriends}/>
+        )
+      }
     </div>
   )
 }

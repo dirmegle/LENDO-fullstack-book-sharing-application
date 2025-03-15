@@ -1,13 +1,15 @@
 import noCover from '@/assets/images/noCover.png'
 import BooksDisplay from '@/components/BooksDisplay'
 import Notification from '@/components/Notification'
-import { Separator } from '@/components/Separator'
 import useUserContext from '@/context/UserContext'
 import { trpc } from '@/trpc'
 import { NotificationWithISOCreatedAt } from '@server/entities/notification'
 import { Book, BookCopy } from '@server/shared/types'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import illustrationHome from '@/assets/images/illustrationHome.png'
+import NoResultsMessage from '@/components/NoResultsMessage'
+import illustrationNotification from '@/assets/images/illustrationNotifications.png'
 
 export default function HomePage() {
   const navigate = useNavigate()
@@ -39,19 +41,26 @@ export default function HomePage() {
 
   return (
     <div>
-      <div>
-        <h1 className="text-4xl font-medium">
-          {user ? `Hey there, ${user.firstName}!` : 'Hey there!'}
+      <div className='border border-border p-4 flex lg:flex-row flex-col justify-center items-center gap-8 shadow-[3px_3px_#141414] lg:h-[300px] h-max-content'>
+        <div className='flex flex-col gap-2'>
+
+        <h1 className="text-4xl font-medium text-center lg:text-left">
+          {user ? `Hey there, ${user.firstName.trim()}!` : 'Hey there!'}
         </h1>
+        <p className='text-center lg:text-left'>Let's start reading...</p>
+        </div>
+        
+        <div className='lg:h-[400px] lg:w-[400px] w-full h-auto flex justify-center'>
+          <img src={illustrationHome} alt="illustration people sitting together" />
+        </div>
       </div>
-      <Separator className="my-4" />
-      <div className="mb-8">
+      <div className="my-8">
         <h2 className="font-medium text-3xl mb-4">See what's new:</h2>
         <div className="border border-border h-content max-h-[300px] overflow-y-auto shadow-[3px_3px_#141414]">
           {notifications.length > 0 ? (
             notifications.map((notification) => <Notification notification={notification} />)
           ) : (
-            <p className="p-4">No notifications yet</p>
+            <NoResultsMessage message='No notifications yet. Add some books and send out some friendship requests!' illustrationLink={illustrationNotification}/>
           )}
         </div>
       </div>
@@ -82,8 +91,8 @@ export default function HomePage() {
         </div>
       )}
       <div className='flex flex-col gap-8'>
-      {userBookCopies && ( <BooksDisplay bookCopies={userBookCopies} title='Browse your library:' link='/books'/> )}
-      {friendsBooks && ( <BooksDisplay bookCopies={friendsBooks} title='Browse your friends books:' link='/books'/>)}
+      {userBookCopies && ( <BooksDisplay noResultsMessage='You have no books in your library. Add some!' bookCopies={userBookCopies} title='Browse your library:' link='/library?activeTab=personal'/> )}
+      {friendsBooks && ( <BooksDisplay noResultsMessage='There are no books in your friends library yet.' bookCopies={friendsBooks} title='Browse your friends books:' link='/library?activeTab=friends'/>)}
       </div>
     </div>
   )
