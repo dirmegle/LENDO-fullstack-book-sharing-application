@@ -81,7 +81,7 @@ jobs:
   build-deploy:
     needs: test
     runs-on: ubuntu-22.04
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/master'
     env:
       CLIENT_IMAGE_TAG: lendo/client
       SERVER_IMAGE_TAG: lendo/server
