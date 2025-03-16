@@ -1,5 +1,7 @@
 # Lendo - book sharing app
 
+Deployed application: https://lendo.7vf3ffww5y92t.eu-central-1.cs.amazonlightsail.com/
+
 ## About the project
 
 Lendo is a fullstack book sharing application that's meant to foster the community of like-minded readers. People are able to create their network of friends, shares their insights on any book, create their personal libraries and reserve or lend their own books.
