@@ -44,7 +44,7 @@ export default function HomePage() {
       <div className='border border-border p-4 flex lg:flex-row flex-col justify-center items-center gap-8 shadow-[3px_3px_#141414] lg:h-[300px] h-max-content'>
         <div className='flex flex-col gap-2'>
 
-        <h1 className="text-4xl font-medium text-center lg:text-left">
+        <h1 data-testid="greeting-message" className="text-4xl font-medium text-center lg:text-left">
           {user ? `Hey there, ${user.firstName.trim()}!` : 'Hey there!'}
         </h1>
         <p className='text-center lg:text-left'>Let's start reading...</p>

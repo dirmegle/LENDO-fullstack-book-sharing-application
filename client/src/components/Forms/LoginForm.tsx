@@ -30,8 +30,8 @@ export default function LoginForm() {
     const onSubmit = async (userLogin: z.infer<typeof formSchema>) => {
       try {
         const {accessToken, expirationDate} = await trpc.user.login.mutate(userLogin)
-        fetchUserData()
         setAccessTokenCookie(accessToken, expirationDate)
+        await fetchUserData()
         navigate('/')
       } catch {
         const fields = ["email", "password"] as const

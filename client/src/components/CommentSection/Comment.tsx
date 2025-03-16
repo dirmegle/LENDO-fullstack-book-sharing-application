@@ -77,7 +77,7 @@ export default function Comment({ id, content, createdAt, userId, onDeletion }: 
   return (
     commentAuthor && (
       <Dialog>
-        <div className="flex flex-col border border-border mb-4 p-2 shadow-[3px_3px_#141414]">
+        <div data-testid="comment" className="flex flex-col border border-border mb-4 p-2 shadow-[3px_3px_#141414]">
           <div className="flex flex-row items-center">
             <div className="border border-border w-12 h-12 bg-accent-purple">
               <UserProfilePic className="w-full h-full" />
@@ -102,7 +102,7 @@ export default function Comment({ id, content, createdAt, userId, onDeletion }: 
           {isAuthUserAuthor && (
             <div className="flex flex-row justify-end mt-2">
               {isEditing && (
-                <Button size="xsm" variant="outline" onClick={handleSaveChanges}>
+                <Button size="xsm" variant="outline" onClick={handleSaveChanges} data-testid="comment-save-changes-button">
                   Save changes
                 </Button>
               )}
@@ -111,11 +111,12 @@ export default function Comment({ id, content, createdAt, userId, onDeletion }: 
                 variant="outline"
                 className="mx-1"
                 onClick={handleEditToggle}
+                data-testid="comment-edit-button"
               >
                 <Edit />
               </Button>
               <DialogTrigger>
-                <Button size="smallIcon" variant="outline" onClick={() => setDialogVisibility(true)}>
+                <Button size="smallIcon" variant="outline" onClick={() => setDialogVisibility(true)} data-testid="comment-delete-button">
                   <Delete />
                 </Button>
               </DialogTrigger>
@@ -123,11 +124,11 @@ export default function Comment({ id, content, createdAt, userId, onDeletion }: 
           )}
         </div>
         {isDialogVisible && (
-          <DialogContent>
+          <DialogContent data-testid="comment-deletion-dialog">
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>This action cannot be undone</DialogDescription>
           <DialogFooter>
-          <Button variant="destructive" onClick={handleCommentDeletion}>Delete</Button>
+          <Button data-testid="comment-deletion-dialog-button" variant="destructive" onClick={handleCommentDeletion}>Delete</Button>
           <Button onClick={() => setDialogVisibility(false)}>Cancel</Button>
         </DialogFooter>
         </DialogContent>
