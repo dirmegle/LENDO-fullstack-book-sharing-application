@@ -20,7 +20,7 @@ export default function NavLinkComponent({
       className={({ isActive }) =>
         cn(
           "flex items-center gap-2 rounded-md mb-3 p-2 text-primary text-md hover:bg-muted-green transition-all duration-100 ease-in-out",
-          isActive && "outline outline-[1px] outline-border bg-accent-green"
+          isActive && "outline outline-[1px] outline-border bg-accent-green shadow-[3px_3px_#141414]"
         )
       }
     >

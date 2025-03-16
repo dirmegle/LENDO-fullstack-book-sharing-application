@@ -16,8 +16,6 @@ export default function FriendSearch({ existingFriends }: FriendsSearchProps) {
   const [searchValue, setSearchValue] = useState('')
   const [results, setResults] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(false)
-
-  // Track local pending invites
   const [localPendingIds, setLocalPendingIds] = useState<string[]>([])
 
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
@@ -73,7 +71,6 @@ export default function FriendSearch({ existingFriends }: FriendsSearchProps) {
   }
 
   const handleInvitationSending = async (user: User) => {
-    // Immediately mark the user as "locally pending" to disable the button
     setLocalPendingIds((prev) => [...prev, user.id])
 
     try {
@@ -82,7 +79,6 @@ export default function FriendSearch({ existingFriends }: FriendsSearchProps) {
         title: `Friendship request to ${user.firstName} ${user.lastName} has been sent`,
       })
     } catch {
-      // If the request fails, remove the user from localPendingIds to re-enable the button
       setLocalPendingIds((prev) => prev.filter((id) => id !== user.id))
       toast({
         title: `Something went wrong.`,

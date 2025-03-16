@@ -77,7 +77,7 @@ export default function Comment({ id, content, createdAt, userId, onDeletion }: 
   return (
     commentAuthor && (
       <Dialog>
-        <div className="flex flex-col border border-border mb-4 p-2">
+        <div className="flex flex-col border border-border mb-4 p-2 shadow-[3px_3px_#141414]">
           <div className="flex flex-row items-center">
             <div className="border border-border w-12 h-12 bg-accent-purple">
               <UserProfilePic className="w-full h-full" />

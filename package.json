@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "workspaces": "npm run dev -w client; npm run dev -w server"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +15,6 @@
     "client"
   ],
   "dependencies": {
-    "@trpc/client": "^10.45.2",
-    "vite-plugin-svgr": "^4.3.0"
+    "@trpc/client": "^10.45.2"
   }
 }

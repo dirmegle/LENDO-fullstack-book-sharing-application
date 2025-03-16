@@ -1,4 +1,4 @@
-import type { Comment } from '@server/database'
+import type { Comment } from '@server/database/types'
 import { z } from 'zod'
 
 export const commentSchema = z.object({

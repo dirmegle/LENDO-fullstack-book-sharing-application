@@ -1,9 +1,11 @@
+import NoResultsMessage from '@/components/NoResultsMessage'
 import ReservationRow from '@/components/ReservationRow'
 import { Tabs, TabsList, TabsTrigger } from '@/components/Tabs'
 import { useToast } from '@/hooks/useToast'
 import { trpc } from '@/trpc'
 import { ReservationWithISOString } from '@server/entities/reservation'
 import { useEffect, useState } from 'react'
+import illustrationReservations from '@/assets/images/illustrationReservations.png'
 
 export default function Reservations() {
   const [activeTab, setActiveTab] = useState('owner')
@@ -55,43 +57,84 @@ export default function Reservations() {
       </div>
       <div className="mb-4">
         <div>
-          {activeTab === 'owner' ? (
-            filterOnlyPending(ownerReservations).length > 0 && (
-              <>
-                <h2 className="font-medium my-2">Check these out</h2>
-                <div className='flex flex-col gap-2'>
-                  {filterOnlyPending(ownerReservations).map((reservation) => (
-                    <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
-                  ))}
-                </div>
-              </>
-            )
-          ) : (
-            filterOnlyPending(reserverReservations).length > 0 && (
-              <>
-                <h2 className="font-medium my-2">Still waiting for a response on these</h2>
-                <div className='flex flex-col gap-2'>
-                  {filterOnlyPending(reserverReservations).map((reservation) => (
-                    <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
-                  ))}
-                </div>
-              </>
-            )
-          )}
+          {activeTab === 'owner'
+            ? filterOnlyPending(ownerReservations).length > 0 && (
+                <>
+                  <h2 className="font-medium my-2">Check these out</h2>
+                  <div className="flex flex-col gap-2">
+                    {filterOnlyPending(ownerReservations).map((reservation) => (
+                      <ReservationRow
+                        key={reservation.id}
+                        reservation={reservation}
+                        bookDetails={true}
+                        asLink={true}
+                      />
+                    ))}
+                  </div>
+                </>
+              )
+            : filterOnlyPending(reserverReservations).length > 0 && (
+                <>
+                  <h2 className="font-medium my-2">Still waiting for a response on these</h2>
+                  <div className="flex flex-col gap-2">
+                    {filterOnlyPending(reserverReservations).map((reservation) => (
+                      <ReservationRow
+                        key={reservation.id}
+                        reservation={reservation}
+                        bookDetails={true}
+                        asLink={true}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
         </div>
       </div>
       <div>
-      <h2 className="font-medium mb-2">All reservations</h2>
-      <div className='flex flex-col gap-2'>
-        {activeTab === 'owner'
-          ? filterOutPending(ownerReservations).map((reservation) => (
-              <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
-            ))
-          : filterOutPending(reserverReservations).map((reservation) => (
-              <ReservationRow key={reservation.id} reservation={reservation} bookDetails={true} asLink={true}/>
-            ))}
-      </div>
-        
+        <h2 className="font-medium mb-2">All reservations</h2>
+        <div className="flex flex-col gap-2">
+          {activeTab === 'owner' ? (
+            <>
+              {filterOutPending(ownerReservations).length > 0 ? (
+                filterOutPending(ownerReservations).map((reservation) => (
+                  <ReservationRow
+                    key={reservation.id}
+                    reservation={reservation}
+                    bookDetails={true}
+                    asLink={true}
+                  />
+                ))
+              ) : (
+                <div className='mt-4'>
+                  <NoResultsMessage
+                    message="No reservations yet"
+                    illustrationLink={illustrationReservations}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              {filterOutPending(reserverReservations).length > 0 ? (
+                filterOutPending(reserverReservations).map((reservation) => (
+                  <ReservationRow
+                    key={reservation.id}
+                    reservation={reservation}
+                    bookDetails={true}
+                    asLink={true}
+                  />
+                ))
+              ) : (
+                <div className='mt-4'>
+                  <NoResultsMessage
+                    message="No reservations yet"
+                    illustrationLink={illustrationReservations}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   )
