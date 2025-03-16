@@ -16,7 +16,7 @@ While there are many elaborate platforms to review books, there is a growing dem
 
 ### Application overview:
 
-At the moment, the backend has been set to allow the user to:
+At the moment, the application allows the user to:
 
 - Create their profile
 - Connect with friends
@@ -27,7 +27,7 @@ At the moment, the backend has been set to allow the user to:
 - Search for books
   - By author, title or ISBN
 - Add books to their personal library
-- Create reservations for books owned ny friends:
+- Create reservations for books owned by friends:
   - See available reservation dates
   - Create reservation requests
   - Book owners can confirm or reject reservation requests
@@ -36,11 +36,12 @@ At the moment, the backend has been set to allow the user to:
 - Comment on books
   - Can choose to make their comments public or private (only available to friends)
   - Can edit their own comments
+- Receive book recommendation based on NYT Bestellers lists
 
 ### Technologies used:
 
-- **Backend:** RPC API, TypeScript, Node.js, Kysely, PostgreSQL, Google Books API
-- **Frontend (planned):** React, TypeScript, Tailwind, shadcn/ui
+- **Backend:** RPC API, TypeScript, Node.js, Kysely, PostgreSQL, Google Books API, NYT Books API
+- **Frontend:** React, TypeScript, Tailwind, shadcn/ui
 
 ### Database schema
 https://dbdiagram.io/d/Lendo-66e83d9a6dde7f414941cc1f 
@@ -49,13 +50,13 @@ https://dbdiagram.io/d/Lendo-66e83d9a6dde7f414941cc1f
 
 | No. | Feature                                                             | Frontend | Backend |
 | --- | ------------------------------------------------------------------- | :------: | :-----: |
-| 1.  | User profile creation and authorization                             |          |    ✓    |
-| 2.  | Friendship between users                                            |          |    ✓    |
-| 3.  | Book data retrieval using Google Books API                          |          |    ✓    |
-| 4.  | Creation of personal book library                                   |          |    ✓    |
-| 5.  | Book reservation system                                             |          |    ✓    |
-| 6.  | Notification system                                                 |          |    ✓    |
-| 7.  | Book commenting                                                     |          |    ✓    |
+| 1.  | User profile creation and authorization                             |     ✓     |    ✓    |
+| 2.  | Friendship between users                                            |     ✓     |    ✓    |
+| 3.  | Book data retrieval using Google Books API                          |     ✓     |    ✓    |
+| 4.  | Creation of personal book library                                   |     ✓     |    ✓    |
+| 5.  | Book reservation system                                             |     ✓     |    ✓    |
+| 6.  | Notification system                                                 |     ✓     |    ✓    |
+| 7.  | Book commenting                                                     |     ✓     |    ✓    |
 | 8.  | Direct messaging                                                    |          |         |
 | 9.  | Friends activity display                                            |          |         |
 | 10. | Evaluation system for books                                         |          |         |
@@ -66,7 +67,12 @@ https://dbdiagram.io/d/Lendo-66e83d9a6dde7f414941cc1f
 **Please note:** current project scope involves only features up until direct messaging (8).
 The following features will be implemented in the near future.
 
-### Planned feature improvements:
+### Planned common UI improvements and other for better user experience:
+- Add pagination to Library, Reservations, Friends pages
+- Add filtering to pages with data. For reservations, filtering by status or date. For friends, filtering by name. For library, filtering by book data or owner. 
+- Implement web socket or server sent events for more dynamic notification system.
+
+### Planned current feature improvements:
 
 - **User profile creation and authorization:**
 
@@ -74,9 +80,15 @@ The following features will be implemented in the near future.
   - Implement refresh token to improve security
   - Add setting to update user profile information
   - Forgot password (update password) feature
+  - Sign out function
+
+- **User profile:**
+  - Add display of user profile with data like owned books, common friends.
+  - Add more intricate friendship management UI. 
 
 - **Book reservation system:**
-  - Ability to change reservation dates instead of deleting old reservation and creating a new one.
+  - Add ability to change reservation dates instead of deleting old reservation and creating a new one.
+
 
 ## How to run the application:
 
@@ -87,4 +99,4 @@ The following features will be implemented in the near future.
 5. Run `npm run migrate:latest -w server` to run database migrations.
 6. Run `npm run gen:types -w server` to generate types.
 7. Run `npm run dev -w server` to start the server.
-8. Access `http://localhost:3000/api/v1/trpc-panel` to test the procedures
+8. Access `http://localhost:3000/api/v1/trpc-panel` to test the tRPC procedures
