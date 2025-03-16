@@ -167,7 +167,7 @@ jobs:
                 "NODE_ENV": "production",
                 "PORT": "3000",
                 "DATABASE_URL": "${{ secrets.PROD_DATABASE_URL }}",
-                "TOKEN_KEY": "${{ secrets.PROD_TOKEN_KEY }}"
+                "ACCESS_TOKEN_KEY": "${{ secrets.PROD_ACCESS_TOKEN_KEY }}"
               }
             }
           }' > containers.json
