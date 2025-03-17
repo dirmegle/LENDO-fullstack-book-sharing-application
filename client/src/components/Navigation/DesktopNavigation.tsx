@@ -32,7 +32,7 @@ export default function Navigation() {
     <aside className={navClasses}>
       <button onClick={handleClick} className='h-10 absolute top-0 bg-accent-green w-full rounded-t-md flex items-center justify-center hover:bg-muted-green transition-all duration-300 ease-in-out border-b border-border'>{isExpanded ? <ArrowLeft /> : <ArrowRight />}</button>
       <nav>{navLinks}</nav>
-      <div className='absolute bottom-0 w-full px-4'>
+      <div className='absolute bottom-0 w-full px-3'>
         <UserProfileHandler isExpanded={isExpanded}/>
       </div>
     </aside>
