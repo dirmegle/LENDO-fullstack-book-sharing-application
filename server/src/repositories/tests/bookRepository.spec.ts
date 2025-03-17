@@ -1,7 +1,7 @@
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
 import { fakeBook, fakeBookCopyWithId, fakeUserWithId } from '@server/entities/tests/fakes'
-import { insertAll } from '@tests/utils/records'
+import { insertAll, selectAll } from '@tests/utils/records'
 import { bookRepository } from '../bookRepository'
 
 const db = await wrapInRollbacks(createTestDatabase())
@@ -39,5 +39,43 @@ describe('getBookByBookCopyId', () => {
     const [existingBookCopy] = await insertAll(db, 'bookCopy', [fakeBookCopyWithId({isbn: existingBook.isbn, ownerId: owner.id})])
     const result = await repository.getBookByBookCopyId(existingBookCopy.id)
     expect(result).toEqual(existingBook)
+  })
+})
+
+describe('getBookByISBN', () => {
+  it('returns book if it exists', async () => {
+    const [existingBook] = await insertAll(db, 'book', [fakeBook()])
+    const result = await repository.getBookByISBN(existingBook.isbn)
+    expect(result).toEqual(existingBook)
+  })
+})
+
+describe('getBookByDailyRead', () => {
+  it('returns book if it exists', async () => {
+    const currentDateToISO = new Date().toISOString()
+    const [existingBook] = await insertAll(db, 'book', [fakeBook({dailyRead: currentDateToISO})])
+
+    const result = await repository.getBookByDailyRead(currentDateToISO)
+    expect(result).toEqual(existingBook)
+  })
+
+  it('returns undefined if no book has the current date daily read flag', async () => {
+    const currentDateToISO = new Date().toISOString()
+
+    const result = await repository.getBookByDailyRead(currentDateToISO)
+    expect(result).toBeUndefined()
+  })
+})
+
+describe('addDailyReadDate', () => {
+  it('updates book if it exists', async () => {
+    const currentDateToISO = new Date().toISOString()
+
+    const [existingBook] = await insertAll(db, 'book', [fakeBook({dailyRead: null})])
+
+    await repository.addDailyReadDate(currentDateToISO, existingBook.isbn)
+
+    const [result] = await selectAll(db, 'book', (q) => q('isbn', '=', existingBook.isbn))
+    expect(result.dailyRead).toEqual(currentDateToISO)
   })
 })

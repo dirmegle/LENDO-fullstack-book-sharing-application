@@ -1,7 +1,7 @@
 import { createTestDatabase } from '@tests/utils/database'
 import { wrapInRollbacks } from '@tests/utils/transactions'
-import { fakeUserWithId } from '@server/entities/tests/fakes'
-import { insertAll } from '@tests/utils/records'
+import { fakeBook, fakeBookCopyWithId, fakeFriendshipWithId, fakeUserWithId } from '@server/entities/tests/fakes'
+import { insertAll, selectAll } from '@tests/utils/records'
 import { random } from '@tests/utils/random'
 import { userRepository } from '../userRepository'
 
@@ -57,3 +57,53 @@ describe('findById', () => {
     expect(foundUser).toBeUndefined()
   })
 })
+
+describe('findByBookCopyId', () => {
+  it('returns user by book copy id if exists', async () => {
+    const [user] = await insertAll(db, 'user', [fakeUserWithId()])
+    const [book] = await insertAll(db, 'book', [fakeBook()])
+    const [bookCopy] = await insertAll(db, 'bookCopy', [fakeBookCopyWithId({ownerId: user.id, isbn: book.isbn})])
+
+    const foundUser = await repository.findByBookCopyId(bookCopy.id)
+    expect(foundUser).toEqual(user)
+  })
+})
+
+describe('getUserFriendsByUser', () => {
+  it('returns an array of user friends', async () => {
+    const [user, friendUser] = await insertAll(db, 'user', [fakeUserWithId(), fakeUserWithId()])
+    await insertAll(db, 'friendship', [fakeFriendshipWithId({fromUserId: user.id, toUserId: friendUser.id, status: 'accepted'})])
+
+    const [ friend ] = await repository.getUserFriendsByUser(user.id)
+
+    expect(friend.userId).toEqual(friendUser.id)
+  })
+
+  it('returns an empty array if user has no friends', async () => {
+    const [user] = await insertAll(db, 'user', [fakeUserWithId()])
+    const friends = await repository.getUserFriendsByUser(user.id)
+    expect(friends).toEqual([])
+  })
+})
+
+describe('searchUserByName', () => {
+  it('returns user by partial full name', async () => {
+    const [user] = await insertAll(db, 'user', [fakeUserWithId()])
+    const  [ foundUser ] = await repository.searchUserByName(user.firstName)
+    expect(foundUser).toEqual(user)
+  })
+})
+
+describe('updateEmail', () => {
+  it('updates user email', async () => {
+    const [user] = await insertAll(db, 'user', [fakeUserWithId()])
+    await repository.updateEmail('newemail@domain.com', user.id)
+
+    const [updatedUser] = await selectAll(db, 'user', (q) =>
+          q('id', '=', user.id)
+        )
+    expect(updatedUser.email).toEqual('newemail@domain.com')
+  })
+})
+
+

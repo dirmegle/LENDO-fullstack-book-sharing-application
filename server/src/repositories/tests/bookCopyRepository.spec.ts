@@ -3,9 +3,10 @@ import { wrapInRollbacks } from '@tests/utils/transactions'
 import {
   fakeBook,
   fakeBookCopyWithId,
+  fakeFriendshipWithId,
   fakeUserWithId,
 } from '@server/entities/tests/fakes'
-import { insertAll } from '@tests/utils/records'
+import { insertAll, selectAll } from '@tests/utils/records'
 import { random } from '@tests/utils/random'
 import { bookCopyRepository } from '../bookCopyRepository'
 
@@ -49,7 +50,7 @@ describe('getByOwnerId', () => {
       })
     )
 
-    const [ response ] = await repository.getByOwnerId(existingBookCopy.ownerId)
+    const [response] = await repository.getByOwnerId(existingBookCopy.ownerId)
     expect(response).toEqual(existingBookCopy)
   })
   it('returns undefined if there are no copies with the user id', async () => {
@@ -123,5 +124,94 @@ describe('updateAvailability', () => {
   })
   it('throws error if bookCopy with the id does not exist', async () => {
     await expect(repository.updateAvailability(random.guid())).rejects.toThrow()
+  })
+})
+
+describe('getBookCopiesByFriends', () => {
+  it('returns a book copy array from friends', async () => {
+    const [friendUser] = await insertAll(db, 'user', [fakeUserWithId()])
+    await insertAll(db, 'friendship', [
+      fakeFriendshipWithId({
+        fromUserId: user.id,
+        toUserId: friendUser.id,
+        status: 'accepted',
+      }),
+    ])
+
+    const [existingBookCopy] = await insertAll(
+      db,
+      'bookCopy',
+      fakeBookCopyWithId({
+        isbn: book.isbn,
+        ownerId: friendUser.id,
+      })
+    )
+
+    const [response] = await repository.getBookCopiesByFriends(user.id)
+    expect(response).toEqual(existingBookCopy)
+  })
+
+  describe('getBookCopiesByFriendsAndISBN', () => {
+    it('returns a book copy array from friends', async () => {
+      const [friendUser] = await insertAll(db, 'user', [fakeUserWithId()])
+      await insertAll(db, 'friendship', [
+        fakeFriendshipWithId({
+          fromUserId: user.id,
+          toUserId: friendUser.id,
+          status: 'accepted',
+        }),
+      ])
+
+      const [existingBookCopy] = await insertAll(
+        db,
+        'bookCopy',
+        fakeBookCopyWithId({
+          isbn: book.isbn,
+          ownerId: friendUser.id,
+        })
+      )
+
+      const [response] = await repository.getBookCopiesByFriendsAndISBN(
+        user.id,
+        book.isbn
+      )
+      expect(response.id).toEqual(existingBookCopy.id)
+    })
+
+    it('returns undefined if copy with ISBN does not exist', async () => {
+      const response = await repository.getByISBNAndOwnerId(
+        String(random.integer({ min: 1000000000, max: 9999999999 })),
+        random.guid()
+      )
+      expect(response).toBeUndefined()
+    })
+    it('returns undefined if copy with ISBN does not exist', async () => {
+      const response = await repository.getByISBNAndOwnerId(
+        String(random.integer({ min: 1000000000, max: 9999999999 })),
+        random.guid()
+      )
+      expect(response).toBeUndefined()
+    })
+  })
+
+  describe('removeBookCopy', () => {
+    it('updates book copy status', async () => {
+      const [existingBookCopy] = await insertAll(
+        db,
+        'bookCopy',
+        fakeBookCopyWithId({
+          isbn: book.isbn,
+          ownerId: user.id,
+          isAvailable: true,
+        })
+      )
+
+      await repository.removeBookCopy(existingBookCopy.id)
+
+      const [updatedBookCopy] = await selectAll(db, 'bookCopy', (q) =>
+        q('id', '=', existingBookCopy.id)
+      )
+      expect(updatedBookCopy.isAvailable).toEqual(false)
+    })
   })
 })
