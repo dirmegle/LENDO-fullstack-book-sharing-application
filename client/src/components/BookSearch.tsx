@@ -85,6 +85,7 @@ export default function BookSearch() {
           <div
             className="p-2 absolute top-full left-0 w-full z-20 bg-background max-h-60 overflow-auto border border-t-0 border-border"
             ref={resultsWindowRef}
+            data-testid="book-search-results"
           >
             {isLoading && <Loader />}
             {results.length > 0 &&

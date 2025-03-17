@@ -48,6 +48,7 @@ const Toast = React.forwardRef<
       ref={ref}
       className={cn(toastVariants({ variant }), className)}
       {...props}
+      data-testid="toast"
     />
   )
 })
