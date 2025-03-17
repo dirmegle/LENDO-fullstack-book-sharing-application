@@ -33,6 +33,7 @@ export default function LoginForm() {
         setAccessTokenCookie(accessToken, expirationDate)
         await fetchUserData()
         navigate('/')
+        window.location.reload()
       } catch {
         const fields = ["email", "password"] as const
         fields.forEach((field) => {

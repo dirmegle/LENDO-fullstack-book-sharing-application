@@ -5,6 +5,7 @@ import BurgerMenu from "@/assets/icons/burger.svg?react";
 import { useState } from "react";
 import classNames from "classnames";
 import Logo from "../Logo";
+import UserProfileHandler from "../UserProfileHandler";
 
 export default function MobileNavigation() {
   const [isNavOpen, setNavOpen] = useState(false);
@@ -25,7 +26,6 @@ export default function MobileNavigation() {
     setNavOpen(!isNavOpen);
   };
 
-  // Define the classes for the nav menu with Tailwind
   const navMenuClasses = classNames(
     "p-4 bg-background flex flex-col transition-all duration-300 ease-in-out border-b border-border",
     {
@@ -46,6 +46,7 @@ export default function MobileNavigation() {
       </div>
       <nav className={navMenuClasses}>
         {navLinks}
+        <UserProfileHandler isExpanded={true}/>
       </nav>
     </div>
   );
