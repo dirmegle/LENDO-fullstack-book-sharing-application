@@ -82,7 +82,6 @@ The following features will be implemented in the near future.
   - Implement refresh token to improve security
   - Add setting to update user profile information
   - Forgot password (update password) feature
-  - Sign out function
 
 - **User profile:**
   - Add display of user profile with data like owned books, common friends.
@@ -92,13 +91,15 @@ The following features will be implemented in the near future.
   - Add ability to change reservation dates instead of deleting old reservation and creating a new one.
 
 
-## How to run the application:
+## How to run the application locally:
 
 1. Clone the repository
 2. Run `npm install`
 3. Create a Postgre database called 'lendo'
-4. Add env variables according to `.env.example` file inside the server directory
+4. Add env variables according to `.env.example` file inside the server and client directories
 5. Run `npm run migrate:latest -w server` to run database migrations.
 6. Run `npm run gen:types -w server` to generate types.
 7. Run `npm run dev -w server` to start the server.
 8. Access `http://localhost:3000/api/v1/trpc-panel` to test the tRPC procedures
+9. Run `npm run dev -w client` to start the client
+10. Access the client on the indicated port
