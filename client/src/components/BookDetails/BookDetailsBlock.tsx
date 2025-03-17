@@ -91,7 +91,7 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
                 className="h-full w-full object-cover"
               />
               <div className="w-full flex flex-row gap-2 mt-3">
-                <div className='w-full border border-border text-primary font-medium flex items-center justify-center shadow-[3px_3px_#141414]'>{isBookInUserList ? ("In your library") : ("Not owned")}</div>
+                <div data-testid="book-details-ownership-status" className='w-full border border-border text-primary font-medium flex items-center justify-center shadow-[3px_3px_#141414]'>{isBookInUserList ? ("In your library") : ("Not owned")}</div>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
@@ -104,6 +104,7 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
                           }
                           size="iconShadow"
                           variant={isBookInUserList ? 'accentGreen' : 'accentPurple'}
+                          data-testid="personal-library-handler-button"
                         >
                           {isBookInUserList ? <CheckMark /> : <Add />}
                         </Button>
@@ -122,7 +123,7 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
             </div>
             <div className="flex flex-col gap-1 md:items-start items-center">
               <h6 className="mt-10 md:mt-2">{book.author}</h6>
-              <h3 className="text-4xl md:text-left text-center">{book.title}</h3>
+              <h3 data-testid="book-title" className="text-4xl md:text-left text-center">{book.title}</h3>
               <p className="text-xs">{book.isbn}</p>
               <div className="flex gap-2 mb-4">
                 {categories.map((category) => (
@@ -140,13 +141,13 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
       </div>
 
       {isBookAdditionDialogVisibile && (
-        <DialogContent>
+        <DialogContent data-testid="library-addition-dialog">
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
             The book copy will be added to your personal library
           </DialogDescription>
           <DialogFooter>
-            <Button variant="outline" onClick={handleAddBookCopy}>
+            <Button variant="outline" onClick={handleAddBookCopy} data-testid="book-addition-button">
               Add
             </Button>
             <Button onClick={() => setBookAdditionDialogVisibility(false)}>Cancel</Button>
@@ -155,14 +156,14 @@ export default function BookDetailsBlock({ book }: BookDetailsBlockProps) {
       )}
 
       {isBookRemovalDialogVisibile && (
-        <DialogContent>
+        <DialogContent data-testid="library-removal-dialog">
           <DialogTitle>Are you sure?</DialogTitle>
           <DialogDescription>
             The book copy will be removed from your personal library. This action is only available
             if there are no active reservations for this book.
           </DialogDescription>
           <DialogFooter>
-            <Button variant="outline" onClick={handleRemoveBookCopy}>
+            <Button variant="outline" onClick={handleRemoveBookCopy} data-testid="book-removal-button">
               Remove
             </Button>
             <Button onClick={() => setBookRemovalDialogVisibility(false)}>Cancel</Button>

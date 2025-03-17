@@ -4,6 +4,8 @@ import { apiBase } from '@/config'
 import { getAccessToken } from './utils/isAuthenticated'
 import superjson from 'superjson'
 
+console.log('apiBase:', apiBase) 
+
 export const trpc = createTRPCProxyClient<AppRouter>({
   transformer: superjson,
   links: [
