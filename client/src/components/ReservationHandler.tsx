@@ -164,7 +164,6 @@ export default function ReservationHandler({ bookCopyId }: ReservationHandlerPro
       </div>
         <Button onClick={handleReservationCreation}>Reserve</Button>
       </div>
-      {activeReservations.map((reservation) => (<p>{`${reservation.id} ${reservation.status}`}</p>))}
     </div>
   )
 }

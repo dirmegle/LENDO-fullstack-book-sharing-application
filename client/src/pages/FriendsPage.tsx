@@ -85,7 +85,7 @@ export default function FriendsPage() {
       )}
       {
         getExistingFriendships().length > 0 ? (
-          <div className="border border-border p-2">
+          <div className="border border-border p-2 gap-2 flex flex-col">
           {getExistingFriendships().map((friend) => (
             <div key={friend.friendshipId}>
               <FriendProfile {...friend} />
