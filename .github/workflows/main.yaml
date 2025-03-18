@@ -123,7 +123,7 @@ jobs:
           --build-arg ACCESS_TOKEN_KEY=${{secrets.ACCESS_TOKEN_KEY}}
           --build-arg BOOKS_API_KEY=${{secrets.BOOKS_API_KEY}}
           --build-arg NYT_API_KEY=${{secrets.NYT_API_KEY}}
-          
+
       - name: Build client image
         run: >-
           docker build
@@ -175,8 +175,7 @@ jobs:
               "environment": {
                 "NODE_ENV": "production",
                 "PORT": "3000",
-                "DATABASE_URL": "${{ secrets.PROD_DATABASE_URL }}",
-                "ACCESS_TOKEN_KEY": "${{ secrets.PROD_ACCESS_TOKEN_KEY }}"
+                "DATABASE_URL": "${{ secrets.PROD_DATABASE_URL }}"
               }
             }
           }' > containers.json
