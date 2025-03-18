@@ -120,10 +120,10 @@ jobs:
           docker build
           -t $SERVER_IMAGE_TAG
           -f ./server/Dockerfile .
-
-      # if you need to pass additional environment variables to the client
-      # build, then you will need to pass them as a docker build argument:
-      # --build-arg VITE_MY_CUSTOM_VAR=${{vars.MY_CUSTOM_VAR}}
+          --build-arg ACCESS_TOKEN_KEY=${{secrets.ACCESS_TOKEN_KEY}}
+          --build-arg BOOKS_API_KEY=${{secrets.BOOKS_API_KEY}}
+          --build-arg NYT_API_KEY=${{secrets.NYT_API_KEY}}
+          
       - name: Build client image
         run: >-
           docker build
