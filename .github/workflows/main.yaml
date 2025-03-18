@@ -173,9 +173,9 @@ jobs:
                 "NODE_ENV": "production",
                 "PORT": "3000",
                 "DATABASE_URL": "${{ secrets.PROD_DATABASE_URL }}",
-                "ACCESS_TOKEN_KEY": "${{secrets.ACCESS_TOKEN_KEY}}",
-                "BOOKS_API_KEY": "${{secrets.BOOKS_API_KEY}}",
-                "NYT_API_KEY": "${{secrets.NYT_API_KEY}}"
+                "ACCESS_TOKEN_KEY": "${{ secrets.ACCESS_TOKEN_KEY }}",
+                "BOOKS_API_KEY": "${{ secrets.BOOKS_API_KEY }}",
+                "NYT_API_KEY": "${{ secrets.NYT_API_KEY }}"
               }
             }
           }' > containers.json
